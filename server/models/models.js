@@ -40,8 +40,6 @@ const Schedule = sequelize.define('Schedule', {
 })
 
 const Lesson_has_Schedule = sequelize.define('Lesson_has_Schedule', {
-    Lesson_name: { type: DataTypes.STRING },
-    Schedule_id: { type: DataTypes.INTEGER }
 })
 
 Auth.hasOne(User)
@@ -50,8 +48,8 @@ User.belongsTo(Auth)
 Auth.hasMany(Token)
 Token.belongsTo(Auth)
 
-User.hasOne(User_info)
-User_info.belongsTo(User)
+User_info.hasOne(User)
+User.belongsTo(User_info)
 
 User.hasMany(Schedule)
 Schedule.belongsTo(User)
@@ -59,14 +57,14 @@ Schedule.belongsTo(User)
 User.hasMany(Attendance)
 Attendance.belongsTo(User)
 
-User.hasOne(Groups)
-Groups.belongsTo(User)
+Groups.hasMany(User)
+User.belongsTo(Groups)
 
 Schedule.hasMany(Attendance)
 Attendance.belongsTo(Schedule)
 
-Schedule.hasMany(Groups)
-Groups.belongsTo(Schedule)
+Groups.hasMany(Schedule)
+Schedule.belongsTo(Groups)
 
 Lesson.belongsToMany(Schedule, { through: Lesson_has_Schedule })
 Schedule.belongsToMany(Lesson, { through: Lesson_has_Schedule })
