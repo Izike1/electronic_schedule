@@ -8,7 +8,7 @@ const Auth = sequelize.define('Auth', {
     role: { type: DataTypes.STRING, defaultValue: "HEADMAN" }
 })
 const Token = sequelize.define('Token', {
-    accessToken: { type: DataTypes.STRING }
+    refreshToken: { type: DataTypes.STRING }
 })
 const Lesson = sequelize.define('Lesson', {
     name: { type: DataTypes.STRING, primaryKey: true },

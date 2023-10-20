@@ -1,27 +1,17 @@
 const ApiError = require('../error/ApiError');
-const jwt = require('jsonwebtoken')
-const { Auth } = require('../models/models')
-
-const generateJwt = (id, login, role) => {
-    return jwt.sign(
-        { id, login, role },
-        process.env.SECRET_KEY,
-        { expiresIn: '24h' }
-    )
-}
+const authService = require('../service/authService');
 
 class AuthController {
     async registration(req, res, next) {
-        const { login, password, role } = req.body
-        if (!login || !password) {
-            return next(ApiError.badRequest('Некорректный login или password'))
+        try {
+            const {login,password,role} = req.body;
+            const authData = await authService.registration(login,password,role)
+            res.cookie('refreshToken', authData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 100, httpOnly: true})
+            return res.json(authData)
         }
-        const candidate = await Auth.findOne({where: {login:login}})
-        if (candidate) {
-            return next(ApiError.badRequest('Пользователь с таким именем уже существует'))
+        catch (e) {
+            console.log(e)
         }
-        const auth = await Auth.create({ login, role, password })
-        return res.sendStatus(204)
     }
 
     async login(req, res, next) {
