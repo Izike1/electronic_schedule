@@ -1,4 +1,5 @@
-const jwt = require('jsonwebtoken')
+const ApiError = require('../error/ApiError');
+const tokenService = require('../service/tokenService');
 
 module.exports = function (req, res, next) {
     if (req.method === "OPTIONS") {
@@ -7,12 +8,15 @@ module.exports = function (req, res, next) {
     try {
         const token = req.headers.authorization.split(' ')[1] // Bearer
         if (!token) {
-            return res.status(401).json({message: "Не авторизован"})
+            return next(ApiError.UnauthorizedError());
         }
-        const decoded = jwt.verify(token, process.env.SECRET_KEY)
-        req.user = decoded
+        const authData  = tokenService.validateAccessToken(token)
+        if (!authData ) {
+            return  next(ApiError.UnauthorizedError());
+        }
+        req.auth = authData;
         next()
     } catch (e) {
-        res.status(401).json({message: "Не авторизован"})
+        next(ApiError.UnauthorizedError())
     }
 };
