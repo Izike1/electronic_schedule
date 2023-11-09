@@ -1,0 +1,44 @@
+const groupService = require('../service/groupService')
+
+class GroupController {
+    async createGroup(req, res, next) {
+        try {
+            const {groupName, facultyId} = req.body;
+            const group = groupService.createGroup(groupName, facultyId)
+            res.json(group)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async changeGroup(req, res, next) {
+        try {
+            const {groupName, groupId, facultyId} = req.body;
+            const group = groupService.changeGroup(groupName, groupId, facultyId)
+            res.json(group)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getGroups(req, res, next) {
+        try {
+            const groups = groupService.getGroups();
+            res.json(groups)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async removeGroup(req, res, next) {
+        try {
+            const {id} = res.body;
+            const group = groupService.removeGroup(id)
+            res.json(group)
+        } catch (e) {
+            next(e)
+        }
+    }
+}
+
+module.exports = new GroupController()

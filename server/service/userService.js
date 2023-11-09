@@ -31,7 +31,7 @@ class UserService {
     }
 
     async getUsersByGroupName(id) {
-        const group = await Groups.findOne({
+        const group = await Groups.findAll({
             where: {id: id},
             include: [{
                 model: User,
@@ -52,7 +52,7 @@ class UserService {
     }
 
     async getUsersByFacultyName(id) {
-        const faculty = await Faculty.findOne({
+        const faculty = await Faculty.findAll({
             where: {id: id},
             include: [{
                 model: User,
