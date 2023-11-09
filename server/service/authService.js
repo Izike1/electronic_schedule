@@ -22,7 +22,7 @@ class AuthService {
 
     async login(login, password) {
         const candidate = await Auth.findOne({where: {login: login}})
-        if (candidate) {
+        if (!candidate) {
             throw ApiError.badRequest('Пользователь с таким именем не существует')
         }
         if (password !== candidate.password) {

@@ -5,7 +5,7 @@ class AuthController {
         try {
             const {login, password, role} = req.body;
             const authData = await authService.registration(login, password, role)
-            this.sendRefreshTokenCookie(res, authData.refreshToken)
+            this.sendRefreshTokenCookie(res,authData.refreshToken)
             return res.json(authData)
         } catch (e) {
             next(e);
@@ -44,7 +44,6 @@ class AuthController {
             next(e)
         }
     }
-
     sendRefreshTokenCookie(res, refreshToken) {
         res.cookie('refreshToken', refreshToken, {maxAge: 30 * 24 * 60 * 60 * 100, httpOnly: true});
     }
