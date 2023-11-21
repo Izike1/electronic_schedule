@@ -1,15 +1,6 @@
 const groupService = require('../service/groupService')
 
 class GroupController {
-    async createGroup(req, res, next) {
-        try {
-            const {groupName, facultyId} = req.body;
-            const group = groupService.createGroup(groupName, facultyId)
-            res.json(group)
-        } catch (e) {
-            next(e)
-        }
-    }
 
     async changeGroup(req, res, next) {
         try {

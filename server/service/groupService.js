@@ -3,11 +3,11 @@ const ApiError = require('../error/ApiError')
 
 class GroupService {
     async createGroup(groupName, facultyId) {
-        const group = await Groups.findOne({where: {name: groupName}})
+        const group = await Groups.findOne({where: {name: groupName}});
         if (group) {
             throw ApiError.badRequest('Группа существует')
         }
-        return Groups.create({groupName, facultyId})
+        return Groups.create({name:groupName, FacultyId:facultyId})
     }
 
     async changeGroup(groupName, groupId, facultyId) {

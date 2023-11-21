@@ -14,8 +14,11 @@ class UserService {
         if (candidate) {
             throw ApiError.badRequest('Пользователь существует')
         }
-        const userInfo = await User_info.create({firstName, lastName, middleName})
-        const user = await User.create({UserInfoId: userInfo.id, groupId})
+        const userInfo = await User_info.create({
+            first_name: firstName,
+            last_name: lastName,
+            middle_name: middleName,})
+        const user = await User.create({UserInfoId: userInfo.id, GroupId: groupId})
         return {
             userInfo,
             user
