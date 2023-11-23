@@ -1,0 +1,47 @@
+.wrap{
+    max-width:1200px;
+    margin: 0 10px;
+    max-height: 90vh;
+    overflow: auto;
+    position: relative;
+    
+    &.day_off{
+        display: flex;
+        align-items: center;
+    }
+    &::-webkit-scrollbar-thumb{
+        background-color: rgb(192, 192, 192);
+        border-radius: 3.5px;
+    }
+    &::-webkit-scrollbar{
+        width:7px;
+        height: 7px;
+    }
+    &::-webkit-scrollbar-track{
+        background-color: rgb(226, 226, 226);
+
+    }
+}
+
+.lesson_name{
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    span{
+        white-space: nowrap;
+    }
+}
+.main{
+    width: 100%;
+}
+.main,.main th,.main td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 0;
+}
+.main .left_col{
+        padding-left: 5px;
+    text-align: start;
+    white-space: nowrap;
+}

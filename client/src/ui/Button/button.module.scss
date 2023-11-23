@@ -1,0 +1,49 @@
+///// styleType
+.btn{
+    padding: 6px 15px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 300ms,color 300ms,border-color 300ms;
+    
+}
+.common{
+    background-color: white;
+    border: 1px solid #a8a8a8;
+    color: black;
+    &:hover{
+        background-color: #e7e7e7;
+    }
+}
+.active{
+    background-color: #2ab7ca;
+    border: 1px solid #2ab7ca;
+    color: white;
+    &:hover{
+        background-color: #4ec6d6;
+    }
+}
+.warning{
+
+}
+.disabled{
+
+}
+/////
+///// sizes
+.large{
+
+}
+.medium{
+
+}
+.small{
+
+}
+/////
+.loading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+

@@ -1,0 +1,22 @@
+.variant{
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    padding: 7px;
+}
+.variant.attended{
+    background-color: #49e035;
+}   
+.variant.absent{
+    background-color: #fe4a49;
+}
+.variant.sick{
+    background-color: #f17133;
+}
+.variant.order{
+    background-color: #2ab7ca;
+}
+.variant.unknown{
+    background-color: rgb(212, 212, 212);
+    color:black;
+}   

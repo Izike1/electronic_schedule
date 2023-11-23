@@ -1,0 +1,58 @@
+.hint{
+    position: absolute;
+    padding: 7px;
+    border-radius: 12px;
+    display: inline-block;
+    background-color: white;
+    opacity: 0;
+    transition: opacity 100ms, transform 100ms;
+    overflow: hidden;
+    transform: scale(0);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+    z-index: 2;
+    width: 170px ;
+}
+.hint.active{
+    opacity: 1;
+    transition: opacity 200ms, transform 200ms;
+}
+.hint.top{
+    bottom:100%;
+    left:50%;
+    transform: translate(-50%,0) scale(0);
+
+
+    &.active{
+        transform: translate(-50%,0) scale(1);
+    }
+}
+.hint.left{
+    top:50%;
+    left:100%;
+    transform: translate(0%,-50%) scale(0);
+
+    height: 100%;
+
+    &.active{
+        transform:  translate(0%,-50%) scale(1);
+    }
+}
+.hint.bottom{
+    top:100%;
+    left:50%;
+    transform: translate(-50%,0%) scale(0);
+
+
+    &.active{
+        transform: translate(-50%,0%) scale(1);
+    }
+}
+.hint.right{
+    top:50%;
+    right:100%;
+    transform: translate(0%,-50%) scale(0);
+
+    &.active{
+        transform: translate(0%,-50%) scale(1);
+    }
+}
