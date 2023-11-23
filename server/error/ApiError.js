@@ -1,4 +1,4 @@
-class ApiError extends Error{
+class ApiError extends Error {
     status;
     errors;
     constructor(status, message, errors = []) {
@@ -7,7 +7,7 @@ class ApiError extends Error{
         this.errors = errors;
     }
 
-    static UnauthorizedError() {
+    static unauthorizedError() {
         return new ApiError(401, 'Пользователь не авторизован')
     }
 

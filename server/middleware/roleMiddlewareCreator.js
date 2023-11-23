@@ -1,20 +1,18 @@
-const ApiError = require("../exceotions/api-error")
-const roleService = require("../service/role-service")
+const ApiError = require("../error/ApiError")
 
 const roleMiddlewareCreator = (roles) => {
     return async (req, res, next) => {
         try {
-            const { role_id } = req.user
-            if (role_id === null) {
-                return next(ApiError.BadRequest('Вы уволены'))
+            const { role } = req.user
+            if (role === null) {
+                return next(ApiError.badRequest('Вы уволены, лох))'))
             }
-            const userRole = await roleService.getById(role_id)
-            if (!roles.includes(userRole)) {
-                return next(ApiError.Forbidden())
+            if (!roles.includes(role)) {
+                return next(ApiError.forbidden('Нет доступа'))
             }
             return next()
         } catch {
-            next(ApiError.BadRequest('Ошибка'))
+            next(ApiError.badRequest('Ошибка'))
         }
 
     }
