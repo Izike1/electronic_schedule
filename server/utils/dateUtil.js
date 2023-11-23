@@ -10,7 +10,31 @@ const stringToDate = (string) => {
     arr[1] = month
     return (new Date(...arr)).getTime()
 }
+const stringToTime = (dateString, timeString) => {
+    let time
+    if (typeof dateString === 'string') {
+        time = stringToDate(dateString)
+    } else {
+        if (dateString instanceof Date) {
+            dateString.setHours(0)
+            dateString.setMinutes(0)
+            dateString.setMilliseconds(0)
+            time = dateString.getTime()
+        } else {
+            const newDate = new Date(dateString)
+            newDate.setHours(0)
+            newDate.setMinutes(0)
+            newDate.setMilliseconds(0)
+            time = newDate.getTime()
+        }
 
+    }
+
+
+    let [hours, minutes] = timeString.split(':').map((t) => Number(t.trim()))
+    time += (hours * 60 + minutes) * 60 * 1000
+    return time
+}
 const dateToString = (date) => {
     if (typeof date === 'number') {
         date = new Date(date)
@@ -48,4 +72,4 @@ const dateToStartWeek = (val) => {
 
 
 }
-module.exports = { stringToDate, dateToString, dateToStartWeek }
+module.exports = { stringToDate, dateToString, dateToStartWeek, stringToTime }

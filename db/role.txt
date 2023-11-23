@@ -3,4 +3,4 @@
 Староста (зам. старосты) - user-info-id , auth-id,group-id
 Груповой аккаунт - auth-id,group-id
 Декан - auth-id,user-info-id
-Админ - auth-id
+Админ - auth-id         
