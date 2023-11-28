@@ -1,11 +1,15 @@
 const authService = require('../service/authService');
+const {writeToLogFile} = require("../logger");
 
 class AuthController {
     async registration(req, res, next) {
         try {
-            const {login, password, role} = req.body;
+            const { login, password, role } = req.body;
+            const ip = req.user.login;
+            console.log(ip)
             const authData = await authService.registration(login, password, role)
-            this.sendRefreshTokenCookie(res,authData.refreshToken)
+            this.sendRefreshTokenCookie(res, authData.refreshToken)
+            writeToLogFile(`Регистрация ${login},${ip}`)
             return res.json(authData)
         } catch (e) {
             next(e);
@@ -14,7 +18,7 @@ class AuthController {
 
     async login(req, res, next) {
         try {
-            const {login, password} = req.body;
+            const { login, password } = req.body;
             const authData = await authService.login(login, password);
             this.sendRefreshTokenCookie(res, authData.refreshToken)
             return res.json(authData)
@@ -25,7 +29,7 @@ class AuthController {
 
     async logout(req, res, next) {
         try {
-            const {refreshToken} = req.cookies;
+            const { refreshToken } = req.cookies;
             const token = await authService.logout(refreshToken);
             res.clearCookie('refreshToken');
             return res.json(token);
@@ -36,7 +40,7 @@ class AuthController {
 
     async refresh(req, res, next) {
         try {
-            const {refreshToken} = req.cookies;
+            const { refreshToken } = req.cookies;
             const authData = await authService.refresh(refreshToken)
             this.sendRefreshTokenCookie(res, authData.refreshToken)
             return res.json(authData)
@@ -45,7 +49,7 @@ class AuthController {
         }
     }
     sendRefreshTokenCookie(res, refreshToken) {
-        res.cookie('refreshToken', refreshToken, {maxAge: 30 * 24 * 60 * 60 * 100, httpOnly: true});
+        res.cookie('refreshToken', refreshToken, { maxAge: 30 * 24 * 60 * 60 * 100, httpOnly: true });
     }
 }
 
