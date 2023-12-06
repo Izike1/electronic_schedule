@@ -4,17 +4,17 @@ class UserController {
 
     async getUser(req, res, next) {
         try {
-            const {id} = req.body;
+            const { id } = req.query;
             const userData = await userService.getUser(id);
-            res.json(userData)
+            res.json(userData);
         } catch (e) {
-            next(e)
+            next(e);
         }
     }
 
     async getUsersByGroupName(req, res, next) {
         try {
-            const {id} = req.body;
+            const {id} = req.query;
             const group = await userService.getUsersByGroupName(id)
             res.json(group)
         } catch (e) {
@@ -24,7 +24,7 @@ class UserController {
 
     async getUsersByFacultyName(req, res, next) {
         try {
-            const {id} = req.body;
+            const {id} = req.query;
             const faculty = await userService.getUsersByFacultyName(id)
             res.json(faculty)
         } catch (e) {

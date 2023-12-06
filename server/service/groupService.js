@@ -26,6 +26,10 @@ class GroupService {
         return await Groups.findAll()
     }
 
+    async getGroupsByFaculty(id) {
+        return await Groups.findOne({where: {facultyId: id}})
+    }
+
     async removeGroup(groupId) {
         const group = await Groups.findOne({where: {id: groupId}})
         if (!group) {

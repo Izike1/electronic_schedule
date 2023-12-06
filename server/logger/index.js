@@ -1,5 +1,5 @@
-const fs = require('node:fs');
-const path = require('node:path');
+const fs = require('fs');
+const path = require('path');
 
 function writeToLogFile(logData) {
     const logDirectory = '../logs';
@@ -24,28 +24,33 @@ function writeToLogFile(logData) {
         }
     });
 
-    // Очистка файла раз в 5 месяцев
-    fs.stat(logFilePath, (err, stats) => {
+    // Очистка файлов старше 5 месяцев
+    fs.readdir(path.join(__dirname, logDirectory), (err, files) => {
         if (err) {
-            console.error('Ошибка при получении информации о файле:', err);
+            console.error('Ошибка при чтении содержимого папки логов:', err);
         } else {
-            const currentDate = new Date();
-            const lastModifiedTime = stats.mtime;
-
-            const diffInMonths = (currentDate.getFullYear() - lastModifiedTime.getFullYear()) * 12 +
-                currentDate.getMonth() - lastModifiedTime.getMonth();
-
-            if (diffInMonths >= 5) {
-                fs.unlink(logFilePath, (err) => {
+            files.forEach((file) => {
+                const filePath = path.join(__dirname, logDirectory, file);
+                fs.stat(filePath, (err, stats) => {
                     if (err) {
-                        console.error('Ошибка при удалении файла логов:', err);
+                        console.error('Ошибка при получении информации о файле:', err);
                     } else {
-                        console.log('Файл логов успешно удален.');
+                        const fileCreationDate = new Date(stats.birthtime);
+                        const diffInMilliseconds = currentDay - fileCreationDate;
+                        const diffInMonths = diffInMilliseconds / (1000 * 60 * 60 * 24 * 30.5);
+
+                        if (diffInMonths >= 5) {
+                            fs.unlink(filePath, (err) => {
+                                if (err) {
+                                    console.error('Ошибка при удалении файла логов:', err);
+                                } else {
+                                    console.log('Файл логов успешно удален:', filePath);
+                                }
+                            });
+                        }
                     }
                 });
-            } else {
-                console.log('Файл логов не требует очистки.');
-            }
+            });
         }
     });
 }

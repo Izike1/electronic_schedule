@@ -5,6 +5,7 @@ const groupController = require('../controllers/groupController')
 router.post('/changeGroup', groupController.changeGroup)
 
 router.get('/getGroups', groupController.getGroups)
+router.get('/getGroupsByFaculty', groupController.getGroupsByFaculty)
 
 router.delete('/removeGroup', groupController.removeGroup)
 

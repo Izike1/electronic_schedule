@@ -21,6 +21,16 @@ class GroupController {
         }
     }
 
+    async getGroupsByFaculty(req, res, next) {
+        try {
+            const {id} = req.query;
+            const group = groupService.getGroupsByFaculty(id)
+            res.json(group)
+        } catch (e) {
+            next(e)
+        }
+    }
+
     async removeGroup(req, res, next) {
         try {
             const {id} = res.body;
