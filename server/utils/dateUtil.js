@@ -42,7 +42,6 @@ const dateToString = (date) => {
     let dateNumber = date.getDate()
     let month = date.getMonth() + 1
     const year = date.getFullYear()
-    console.log(year)
     month = String(month).length > 1 ? String(month) : '0' + month
     dateNumber = String(dateNumber).length > 1 ? String(dateNumber) : '0' + dateNumber
     return `${dateNumber}.${month}.${year}`

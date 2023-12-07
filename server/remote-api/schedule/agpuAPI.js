@@ -4,6 +4,20 @@ const { stringToDate, dateToStartWeek } = require('../../utils/dateUtil')
 
 // 'ВМ-ИВТ-3-1'
 const agpuURL = 'http://www.it-institut.ru'
+const lessonInfoParser = (lessonInfo) => {
+    let [lessonName, ...additional] = lessonInfo
+    let splitIndex = lessonName.lastIndexOf(',')
+    let type = ''
+    if (splitIndex !== lessonName.length - 1) {
+        type = lessonName.slice(splitIndex + 1)
+    }
+    lessonName = lessonName.slice(0, splitIndex).trim()
+    return {
+        name: lessonName,
+        type,
+        additional
+    }
+}
 const parseTimeTable = (response) => {
     const root = parse(response.data)
 
@@ -26,7 +40,7 @@ const parseTimeTable = (response) => {
                 const lessonInfo = lessonElems[i + offset].querySelectorAll('div span').map((info) => info.innerText.replace(/&quot;/g, '"'))
                 times.push({
                     time: timeElmes[i].time,
-                    lessons: [lessonInfo]
+                    lessons: [lessonInfoParser(lessonInfo)]
                 })
             }
 
@@ -36,7 +50,8 @@ const parseTimeTable = (response) => {
                 offset++
                 if (lessonElems[i + offset].childNodes.length > 0) {
                     const lessonInfo = lessonElems[i + offset].querySelectorAll('div span').map((info) => info.innerText.replace(/&quot;/g, '"'))
-                    times[times.length - 1].lessons.push(lessonInfo)
+
+                    times[times.length - 1].lessons.push(lessonInfoParser(lessonInfo))
                 }
                 curentColspan += colspanOffset
             }
