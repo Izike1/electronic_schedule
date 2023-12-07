@@ -1,7 +1,7 @@
-// const Router = require('express')
-// const router = new Router()
-// const attendanceController = require('../controllers/attendanceController')
-//
-// router.get('/getUsersByGroupName', attendanceController.getUsersByGroupName())
-//
-// module.exports = router
+const Router = require('express')
+const router = new Router()
+const attendanceController = require('../controllers/attendanceController')
+
+router.get('/getSchedule', attendanceController.getSchedule)
+
+module.exports = router

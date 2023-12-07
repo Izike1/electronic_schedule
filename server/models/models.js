@@ -55,9 +55,6 @@ Token.belongsTo(Auth)
 User_info.hasOne(User)
 User.belongsTo(User_info)
 
-User.hasMany(Schedule)
-Schedule.belongsTo(User)
-
 User.hasMany(Attendance)
 Attendance.belongsTo(User)
 
