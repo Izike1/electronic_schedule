@@ -16,11 +16,15 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
 
 
     const showHint = useCallback((e) => {
+        if (fixed) {
+            e.preventDefault()
+            return
+        }
         if (isMobile) {
             e.target.blur()
         }
         setHintActive(true)
-    }, [isMobile])
+    }, [isMobile, fixed])
     const hideHint = useCallback(() => {
         setHintActive(false)
     }, [])
@@ -81,10 +85,10 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
     }, [ref, hideHint])
     return <div ref={ref} className={classes.select + (fixed ? ` ${classes.fixed}` : '')} {...props}>
 
-        <InputBlock style={{
+        <InputBlock disabled={fixed} style={{
             backgroundColor: (selected !== null && selected !== 'unknown') ? attendancesColor[selected] : undefined,
             color: (selected !== null && selected !== 'unknown') ? 'white' : undefined
-        }} value={selected !== null ? attendancesShortRu[selected] : ''} onChange={handleInput} onMouseDown={handleInputClick} onFocus={showHint} />
+        }} value={selected !== null ? attendancesShortRu[selected] : ''} onBlur={hideHint} onChange={handleInput} onMouseDown={handleInputClick} onFocus={showHint} />
 
         <Hint position={hintPos} active={isHintActive}>
             <DelayRemove delay={200} visible={isHintActive}>

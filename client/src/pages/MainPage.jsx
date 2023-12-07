@@ -4,11 +4,16 @@ import { randomArray, randomInt, randomListOfPersons } from "../devUtils/randomD
 import { useAuth } from "../hooks/useAuth"
 import Button from "../ui/Button"
 import Loading from "../ui/Loading"
+import Modal from "../ui/Modal"
+import Page from "../components/Page"
+
 
 const MainPage = () => {
     const auth = useAuth()
     const [isLoading, setIsLoading] = useState(false)
-    return <div>
+    const [modalActive, setModalActive] = useState(false)
+
+    return <Page hasNav >
         <h1>Hello World</h1>
         <h2>{auth.role}</h2>
         <MainTable data={{
@@ -52,10 +57,17 @@ const MainPage = () => {
             }}>Toggle</Button>
             <Button isLoading={isLoading} styleType="active">Отмена</Button>
         </div>
-
-
+        <Modal isActive={modalActive} setIsActive={setModalActive}>
+            <div>123345345345345345</div>
+        </Modal>
+        <Button styleType="warning">Удалить</Button>
+        <Button disabled>А всё</Button>
+        <Button styleType="active" onClick={() => {
+            setModalActive(true)
+        }}>Show Modal</Button>
+        <Button isLoading={isLoading} size="large" styleType="warning">Удалить</Button>
         <Loading size="medium" />
+    </Page >
 
-    </div>
 }
 export default MainPage

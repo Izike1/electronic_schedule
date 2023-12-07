@@ -1,49 +1,76 @@
 ///// styleType
-.btn{
-    padding: 6px 15px;
+.btn {
+    padding: 6px 20px;
     display: block;
     border-radius: 4px;
-    transition: background-color 300ms,color 300ms,border-color 300ms;
-    
+    transition: background-color 300ms, color 300ms, border-color 300ms;
+
 }
-.common{
+
+.common {
     background-color: white;
     border: 1px solid #a8a8a8;
     color: black;
-    &:hover{
-        background-color: #e7e7e7;
+
+    &:not(.disabled):not(.loading) {
+        &:hover {
+            background-color: #eaeaea;
+        }
     }
 }
-.active{
+
+.active {
     background-color: #2ab7ca;
     border: 1px solid #2ab7ca;
     color: white;
-    &:hover{
-        background-color: #4ec6d6;
+
+    &:not(.disabled):not(.loading) {
+        &:hover {
+            background-color: #27acbd;
+        }
     }
 }
-.warning{
 
-}
-.disabled{
+.warning {
+    background-color: #ff3434;
+    border: 1px solid #ff3434;
+    color: white;
 
+    &:not(.disabled):not(.loading) {
+        &:hover {
+            background-color: #ff4747;
+        }
+    }
 }
+
+.disabled {
+    background-color: #e0dbdb;
+    border: 1px solid #858585;
+    color: #858585;
+    position: relative;
+
+    cursor: not-allowed;
+}
+
 /////
 ///// sizes
-.large{
-
+.large {
+    font-size: 20px;
 }
-.medium{
 
+.medium {
+    font-size: 16px;
 }
-.small{
 
+.small {
+    font-size: 14px;
 }
+
 /////
-.loading{
+.loading {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    cursor: not-allowed;
 }
-
-

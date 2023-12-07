@@ -1,7 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import Loading from '../Loading'
 import classes from './button.module.scss'
-const Button = ({ size = "small", isLoading = false, styleType = "common", children, style = {}, ...props }) => {
+import { useClassMap } from '../../hooks/useClassMap'
+/**
+ *  @param {{
+ *      size: 'small'|'large'|'medium',
+ *      isLoading:boolean,
+ *      disabled:boolean,
+ *      styleType:'common'|'active'|'warning'
+ *  }} props 
+ */
+
+const Button = ({ size = "small", isLoading = false, disabled = false, styleType = "common", children, style = {}, ...props }) => {
     const ref = useRef(null)
     const [sizes, setSizes] = useState(null)
     useEffect(() => {
@@ -14,8 +24,16 @@ const Button = ({ size = "small", isLoading = false, styleType = "common", child
             })
         }
     }, [ref])
-    return <button ref={ref} style={isLoading ? { ...sizes, ...style } : { ...style }} className={classes.btn + ' ' + classes[styleType] + (isLoading ? ` ${classes.loading}` : '')} {...props}>
-        {isLoading ? <Loading white size={size} /> : children}
+    const classMap = useMemo(() => ({
+        [classes.btn]: true,
+        [classes.loading]: isLoading,
+        [classes[size]]: true,
+        [classes[styleType]]: true,
+        [classes.disabled]: disabled,
+    }), [size, styleType, isLoading, disabled])
+    const getClasses = useClassMap(classMap)
+    return <button ref={ref} style={isLoading ? { ...sizes, ...style } : { ...style }} className={getClasses()} {...props}>
+        {isLoading ? <Loading white size={size === 'large' ? 'medium' : 'small'} /> : children}
     </button>
 }
 export default Button
