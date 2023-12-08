@@ -1,4 +1,4 @@
-const {Schedule, Groups} = require('../models/models')
+const {Schedule, Groups, Lesson} = require('../models/models')
 const {AgpuAPI} = require("../remote-api/schedule/agpuAPI");
 const {getDateRange, stringToDate, currentDateRound, stringToTime} = require('../utils/dateUtil');
 const {ApiError} = require('../error/ApiError');
@@ -19,7 +19,7 @@ class AttendanceService {
         }
         const scheduleFromDB = await Schedule.findAll({
             where: {
-                groupId: group.id,
+                GroupId: group.id,
                 date: {
                     "$between": getDateRange(currentDate)
                 }
@@ -29,14 +29,32 @@ class AttendanceService {
         if (scheduleFromDB.length > 0) {
             return scheduleFromDB;
         } else {
+            const schedule = []
             const parsedSchedule = await AgpuAPI().getTimeTableByName(name, currentDate);
             const nowDate = currentDateRound(currentDate)
             const day = parsedSchedule.find((day) => stringToDate(day.date) === nowDate.getTime())
-            // for (let i = 0; i < day.times.length; i++) {
-            //
-            // }
-            console.log(day)
-            //await Schedule.create({, currentDate, parsedSchedule});
+            if (day) {
+                for (let i = 0; i < day.times.length; i++) {
+                    const timeSlot = day.times[i];
+                    console.log(timeSlot)
+                    const lessons = timeSlot.lessons;
+                    console.log(lessons)
+                    for(let j = 0; j < lessons.length; j++) {
+                        const lesson = lessons[j];
+
+                        const scheduleItem = {
+                            name: lesson.name,
+                            type: lesson.type,
+                            additional: lesson.additional.join('\n'),
+                            GroupId: group.id,
+                            date: stringToTime(day.date, timeSlot.time.split('-')[0])
+                        }
+                        schedule.push(scheduleItem)
+                    }
+                    console.log({...schedule})
+                }
+            }
+            await Schedule.bulkCreate(schedule);
             return parsedSchedule;
         }
     }

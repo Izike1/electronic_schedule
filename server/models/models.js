@@ -40,6 +40,8 @@ const Faculty = sequelize.define('Faculty', {
 
 const Schedule = sequelize.define('Schedule', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    type: { type: DataTypes.STRING},
+    additional: {type: DataTypes.STRING},
     date: { type: DataTypes.DATE }
 })
 
@@ -54,6 +56,9 @@ Token.belongsTo(Auth)
 
 User_info.hasOne(User)
 User.belongsTo(User_info)
+
+User.hasMany(Schedule)
+Schedule.belongsTo(User)
 
 User.hasMany(Attendance)
 Attendance.belongsTo(User)
