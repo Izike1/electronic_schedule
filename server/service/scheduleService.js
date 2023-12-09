@@ -4,6 +4,7 @@ const {AgpuAPI} = require("../remote-api/schedule/agpuAPI");
 const {getDateRange, stringToDate, currentDateRound, stringToTime} = require('../utils/dateUtil');
 const {ApiError} = require('../error/ApiError');
 const {writeToLogFile} = require('../logger/index');
+const {Op} = require("sequelize");
 
 class ScheduleService {
     async getSchedule(name, currentDate) {
@@ -23,16 +24,15 @@ class ScheduleService {
             where: {
                 GroupId: group.id,
                 date: {
-                    "$between": getDateRange(currentDate)
+                    [Op.between]: getDateRange(currentDate)
                 }
             }
         })
-
+        console.log(scheduleFromDB)
         if (scheduleFromDB.length > 0) {
             return scheduleFromDB;
         } else {
             const scheduleData = []
-            const lessonData = []
             const parsedSchedule = await AgpuAPI().getTimeTableByName(name, currentDate);
             const nowDate = currentDateRound(currentDate)
             const day = parsedSchedule.find((day) => stringToDate(day.date) === nowDate.getTime())
@@ -46,39 +46,36 @@ class ScheduleService {
                         const scheduleItem = {
                             type: lesson.type,
                             additional: lesson.additional.join('\n'),
+                            lesson: lesson.name,
                             GroupId: group.id,
                             date: stringToTime(day.date, timeSlot.time.split('-')[0])
                         }
-                        const lessonItem = {
-                            name: lesson.name
-                        }
                         scheduleData.push(scheduleItem)
-                        lessonData.push(lessonItem)
+
                     }
                 }
             }
             await sequelize.transaction(async (t) => {
-                const findLessons = await Lesson.findAll({ where: { name: lessonData.map(lesson => lesson.name) } });
+                const lessonScheduleEntries = [];
 
-                if (findLessons.length > 0) {
-                    console.log('Some lessons are already in the database');
-                    writeToLogFile('Lessons already exist');
+                for (let i = 0; i < scheduleData.length; i++) {
+                    const schedule = scheduleData[i]
+                    const {lesson: lessonName, ...restedSchedule} = schedule
+                    await Lesson.findOrCreate({
+                        where: {
+                            name: lessonName
+                        },
+                        transaction: t
+                    })
+                    const createdSchedule = await Schedule.create(restedSchedule, {transaction: t})
+                    lessonScheduleEntries.push({
+                        LessonName: lessonName,
+                        ScheduleId: createdSchedule.id,
+                    });
+
                 }
 
-                const createdLessons = await Lesson.bulkCreate(lessonData, { transaction: t });
-                const createdSchedules = await Schedule.bulkCreate(scheduleData, { transaction: t });
-
-                const lessonScheduleEntries = [];
-                createdLessons.forEach((lesson) => {
-                    createdSchedules.forEach((schedule) => {
-                        lessonScheduleEntries.push({
-                            LessonName: lesson.name,
-                            ScheduleId: schedule.id,
-                        });
-                    });
-                });
-
-                await Lesson_has_Schedule.bulkCreate(lessonScheduleEntries, { transaction: t });
+                await Lesson_has_Schedule.bulkCreate(lessonScheduleEntries, {transaction: t});
             });
 
             return parsedSchedule;
