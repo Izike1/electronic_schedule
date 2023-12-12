@@ -1,22 +1,29 @@
-.variant{
+@import '../../../configs/colors.scss';
+
+.variant {
     text-align: center;
     color: white;
     cursor: pointer;
     padding: 7px;
 }
-.variant.attended{
-    background-color: #49e035;
-}   
-.variant.absent{
-    background-color: #fe4a49;
+
+.variant.attended {
+    background-color: $green;
 }
-.variant.sick{
-    background-color: #f17133;
+
+.variant.absent {
+    background-color: $red;
 }
-.variant.order{
-    background-color: #2ab7ca;
+
+.variant.sick {
+    background-color: $orange;
 }
-.variant.unknown{
-    background-color: rgb(212, 212, 212);
-    color:black;
-}   
+
+.variant.order {
+    background-color: $blue;
+}
+
+.variant.unknown {
+    background-color: darken($ll_gray, 4);
+    color: black;
+}

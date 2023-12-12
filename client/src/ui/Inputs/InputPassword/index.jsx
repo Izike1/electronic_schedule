@@ -16,7 +16,11 @@ const InputPassword = ({ size = 'small', ...props }, ref) => {
         <InputText type={isShow ? 'text' : 'password'} className={classes[size]}  {...props} ref={ref} />
         <button type='button' onClick={() => {
             setIsShow((p) => !p)
-        }} className={classes.hint_btn}>{isShow ? '\uD83D\uDC41\ufe0f' : '\uD83D\uDD12'}</button>
+        }} className={classes.hint_btn}>{isShow ? <div className="material-symbols-outlined">
+            visibility_off
+        </div> : <div className="material-symbols-outlined">
+            visibility
+        </div>}</button>
         {/* { dd12} */}
 
     </div>

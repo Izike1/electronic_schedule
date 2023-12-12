@@ -1,3 +1,4 @@
+import FacultiesPage from '../pages/FacultiesPage'
 import LoginPage from '../pages/LoginPage'
 import MainPage from '../pages/MainPage'
 export const RoutesConfig = {
@@ -16,8 +17,11 @@ export const RoutesConfig = {
                 {
                     path: '/',
                     component: <MainPage />
+                },
+                {
+                    path: '/faculties',
+                    component: <FacultiesPage />
                 }
-
             ],
             redirect: '/'
         }

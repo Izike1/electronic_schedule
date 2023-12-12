@@ -1,0 +1,39 @@
+@import '../../configs/colors.scss';
+
+.card {
+    display: flex;
+    width: calc(50% - 5px);
+    min-height: 200px;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    box-shadow: $d_blue 0px 0px 0px 0px;
+    transform: translate(0px, 0px);
+    transition: box-shadow 300ms, transform 300ms;
+
+
+    &:hover {
+        box-shadow: $d_blue 8px 8px 0px 0px;
+        transform: translate(-8px, -8px);
+    }
+}
+
+.link {
+    display: block;
+    color: white;
+    text-decoration: none;
+    background-color: $blue;
+    padding: 20px;
+    flex-grow: 1;
+    border-radius: 30px;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+@media screen and (max-width:768px) {
+    .card {
+        width: 100%;
+
+    }
+}

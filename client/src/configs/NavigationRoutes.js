@@ -6,8 +6,8 @@ export const NavigationRoutesConfig = {
                 link: '/admin'
             },
             {
-                name: 'Группы',
-                link: '/groups'
+                name: 'Факультеты',
+                link: '/faculties'
             },
         ]
     }

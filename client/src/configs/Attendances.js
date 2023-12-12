@@ -10,8 +10,8 @@ Object.freeze(attendances)
 export const attendancesColor = {
     'unknown': '#FFFFFF',
     'attended': '#49e035',
-    'absent': '#fe4a49',
-    'sick': '#f17133',
+    'absent': '#ff4d4d',
+    'sick': '#fe8040',
     'order': '#2ab7ca'
 }
 
