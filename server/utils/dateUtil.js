@@ -1,4 +1,29 @@
+const currentDateRound = (day) => {
+    let startDate = new Date(day)
+    startDate.setMilliseconds(0);
+    startDate.setSeconds(0);
+    startDate.setMinutes(0);
+    startDate.setHours(0);
 
+    return startDate
+}
+const getDateRange = (day) => {
+
+    let startDate = new Date(day)
+    startDate.setMilliseconds(0);
+    startDate.setSeconds(0);
+    startDate.setMinutes(0);
+    startDate.setHours(0);
+    startDate = startDate.toISOString()
+
+    let endDate = new Date(day)
+    endDate.setMilliseconds(999)
+    endDate.setSeconds(59)
+    endDate.setMinutes(59)
+    endDate.setHours(23)
+    endDate = endDate.toISOString()
+    return [startDate,endDate]
+}
 const stringToDate = (string) => {
     const dateRegex = /.*?(\d{1,2})\.(\d{1,2})\.(\d{4,})/gm
     const arr = string.replace(dateRegex, '$3.$2.$1').split('.')
@@ -71,4 +96,4 @@ const dateToStartWeek = (val) => {
 
 
 }
-module.exports = { stringToDate, dateToString, dateToStartWeek, stringToTime }
+module.exports = { stringToDate, dateToString, dateToStartWeek, stringToTime, getDateRange, currentDateRound }

@@ -1,26 +1,31 @@
-const {Groups, User, User_info, Faculty} = require("../models/models");
+const {Attendance, Schedule} = require('../models/models')
+const sequelize = require('../db')
+const {writeToLogFile} = require("../logger");
 const ApiError = require("../error/ApiError");
-const {Schedule} = require('../models/models')
-const { AgpuAPI } = require("../remote-api/schedule/agpuAPI");
+
 class AttendanceService {
-    async getSchedule(id, currentDate) {
-        try {
-            const scheduleFromDB = await Schedule.findAll({where: {id:id, currentDate:currentDate}})
+    async updateAttendance(attendanceData) {
+        await sequelize.transaction(async (t) => {
+            for (const attendanceItem of attendanceData) {
+                const scheduleId = attendanceItem.scheduleId;
+                const attendanceDetails = attendanceItem.attendanceDetails;
 
-            if (scheduleFromDB) {
-                return scheduleFromDB;
-            } else {
-                const parsedSchedule = await AgpuAPI().getTimeTableById(id,currentDate);
+                const schedule = await Schedule.findByPk(scheduleId);
 
-                await Schedule.create({id, currentDate, parsedSchedule});
-
-                return parsedSchedule;
+                if (schedule) {
+                    const attendanceEntries = attendanceDetails.map((detail) => ({
+                        ScheduleId: schedule.id,
+                        userId: detail.userId,
+                        isPresent: detail.isPresent,
+                    }));
+                    await Attendance.bulkCreate(attendanceEntries, {transaction: t});
+                } else {
+                    console.error(`Schedule with ID ${scheduleId} not found.`);
+                }
             }
-        } catch (error) {
-            console.error('Error:', error);
-            throw new Error('Failed to retrieve or parse schedule.');
-        }
+        });
     }
+
 }
 
 module.exports = new AttendanceService();
