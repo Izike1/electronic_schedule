@@ -7,13 +7,14 @@ import InputBlock from '../../ui/InputBlock'
 import List from '../../ui/List'
 import classes from './select.module.scss'
 import Variant from './Variant'
+import Loading from '../../ui/Loading'
 
 const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value = null, ...props }) => {
     const [isHintActive, setHintActive] = useState(false)
     const ref = useRef(null)
     const [selected, setSelected] = useState(value)
     const isMobile = useIsMobile()
-
+    const [isLoading,] = useState(false) /// setIsLoading
 
     const showHint = useCallback((e) => {
         if (fixed) {
@@ -84,7 +85,9 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
         }
     }, [ref, hideHint])
     return <div ref={ref} className={classes.select + (fixed ? ` ${classes.fixed}` : '')} {...props}>
-
+        {isLoading && <div className={classes.loading_wrapper}>
+            <Loading white={selected !== null && selected !== 'unknown'} size="small"></Loading>
+        </div>}
         <InputBlock disabled={fixed} style={{
             backgroundColor: (selected !== null && selected !== 'unknown') ? attendancesColor[selected] : undefined,
             color: (selected !== null && selected !== 'unknown') ? 'white' : undefined

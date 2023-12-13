@@ -53,7 +53,7 @@ class Validate {
         if (typeof this.value !== 'string') {
             return false
         }
-        return /^[A-Za-z\d@$!%*#?&._-]{8,32}$/s.test(this.value)
+        return /^[A-Za-z\d@$!%*#?&._-]{6,32}$/s.test(this.value)
     }
     validLogin() {
         if (typeof this.value !== 'string') {
@@ -66,6 +66,12 @@ class Validate {
             return false
         }
         return /^[A-ZА-ЯЁ][а-яёa-z]{1,20}$/s.test(this.value)
+    }
+    validFaculty() {
+        if (typeof this.value !== 'string') {
+            return false
+        }
+        return /^[ \-()_,.A-ZА-ЯЁа-яёa-z0-9]{1,255}$/s.test(this.value)
     }
     validLastName() {
         if (typeof this.value !== 'string') {

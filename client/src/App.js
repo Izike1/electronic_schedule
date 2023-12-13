@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import MainRouter from './components/MainRouter';
-
+import './configs/colors.scss'
 import AuthContext from './hooks/useAuth';
 import IsMobileContext from './hooks/useIsMobile';
 import getIsMobile from './utils/getIsMobile';

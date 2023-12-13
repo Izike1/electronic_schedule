@@ -1,12 +1,16 @@
-.verify_button{
+@import '../../../configs/colors.scss';
+
+.verify_button {
     display: block;
     width: 100%;
     height: 100%;
     padding: 10px;
 }
-.wrap{
+
+.wrap {
     height: 35px;
 }
-.fixed{
-    background-color: red;
+
+.fixed {
+    background-color: $ll_blue;
 }

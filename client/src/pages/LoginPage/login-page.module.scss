@@ -1,6 +1,8 @@
+@import '../../configs/colors.scss';
+
 .wrap {
     min-height: 100vh;
-    background-color: #e5eef9;
+    background-color: $ll_gray;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,5 +14,13 @@
     padding: 26px;
     background-color: white;
     border-radius: 10px;
-    border: 2px solid rgb(187, 187, 187);
+    border: 2px solid $gray;
+}
+
+@media screen and (min-width:420px) {
+    .form {
+        width: 280px;
+        height: 150px;
+        padding: 20px;
+    }
 }

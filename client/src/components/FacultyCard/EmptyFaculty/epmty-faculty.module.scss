@@ -1,0 +1,50 @@
+@import '../../../configs/colors.scss';
+
+.card {
+    display: flex;
+    width: calc(50% - 15px);
+    min-height: 200px;
+    margin-bottom: 10px;
+    border: 5px dashed $blue;
+    border-radius: 30px;
+
+}
+
+.btn {
+    display: block;
+    flex-grow: 1;
+    background-color: transparent;
+    border-radius: 30px;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: $blue;
+        width: 25px;
+        border-radius: 4px;
+        height: 4px;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(90deg);
+        width: 25px;
+        border-radius: 4px;
+        height: 4px;
+        background-color: $blue;
+    }
+}
+
+@media screen and (max-width:768px) {
+    .card {
+        width: 100%;
+
+    }
+}

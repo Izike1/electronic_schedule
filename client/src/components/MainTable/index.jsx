@@ -1,10 +1,10 @@
 import classes from './table.module.scss'
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import SelectAttendance from '../SelectAttendance/index'
 import { attendancesById } from '../../configs/Attendances';
 import VerifyBlock from './VerifyBlock';
 const MainTable = ({ onChangeTable = (data) => console.log(data), data }) => {
-
+    const [fixedCols, setFixed] = useState([])
     const colSpans = useMemo(() => {
         const colSpans = {
             totalCount: 0,

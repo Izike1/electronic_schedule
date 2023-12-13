@@ -1,3 +1,5 @@
+@import '../../configs/colors.scss';
+
 ///// styleType
 .btn {
     padding: 6px 20px;
@@ -9,7 +11,7 @@
 
 .common {
     background-color: white;
-    border: 1px solid #a8a8a8;
+    border: 1px solid $gray;
     color: black;
 
     &:not(.disabled):not(.loading) {
@@ -20,33 +22,34 @@
 }
 
 .active {
-    background-color: #2ab7ca;
-    border: 1px solid #2ab7ca;
+    background-color: $l_blue;
+    border: 1px solid $l_blue;
+
     color: white;
 
     &:not(.disabled):not(.loading) {
         &:hover {
-            background-color: #27acbd;
+            background-color: lighten($l_blue, 5);
         }
     }
 }
 
 .warning {
-    background-color: #ff3434;
-    border: 1px solid #ff3434;
+    background-color: $red;
+    border: 1px solid $red;
     color: white;
 
     &:not(.disabled):not(.loading) {
         &:hover {
-            background-color: #ff4747;
+            background-color: darken($red, 4);
         }
     }
 }
 
 .disabled {
-    background-color: #e0dbdb;
-    border: 1px solid #858585;
-    color: #858585;
+    background-color: $ll_gray;
+    border: 1px solid $gray;
+    color: $gray;
     position: relative;
 
     cursor: not-allowed;

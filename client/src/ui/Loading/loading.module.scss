@@ -1,8 +1,11 @@
+@import '../../configs/colors.scss';
+
 .loading {
   display: inline-block;
   position: relative;
 
 }
+
 .loading div {
   box-sizing: border-box;
   display: block;
@@ -10,54 +13,66 @@
   border-style: solid;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #2ab7ca transparent transparent transparent;
+  border-color: $l_blue transparent transparent transparent;
 }
-.loading.common div{
+
+.loading.common div {
   border-color: white transparent transparent transparent;
 }
-.large{
+
+.large {
   width: 80px;
   height: 80px;
-  div{
+
+  div {
     width: 64px;
     height: 64px;
     margin: 10px;
-    
+
     border-width: 6px;
   }
 }
-.medium{
+
+.medium {
   width: 35px;
   height: 35px;
-  div{
+
+  div {
     width: 32px;
     height: 32px;
     margin: 1.5px;
     border-width: 3px;
   }
 }
-.small{
+
+.small {
   width: 20px;
   height: 20px;
-  div{
+
+  div {
     width: 20px;
     height: 20px;
     border-width: 3px;
   }
 }
+
 .loading .border1 {
   animation-delay: -0.45s;
 }
+
 .loading .border2 {
   animation-delay: -0.3s;
 }
+
 .loading .border3 {
   animation-delay: -0.15s;
 }
+
 @keyframes lds-ring {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
