@@ -1,5 +1,5 @@
 const sequelize = require('../db');
-const {Schedule, Groups, Lesson, Lesson_has_Schedule} = require('../models/models')
+const {Schedule, Groups, Lesson, Lesson_has_Schedule, User_info} = require('../models/models')
 const {AgpuAPI} = require("../remote-api/schedule/agpuAPI");
 const {getDateRange, stringToDate, currentDateRound, stringToTime} = require('../utils/dateUtil');
 const {ApiError} = require('../error/ApiError');
@@ -28,58 +28,67 @@ class ScheduleService {
                 }
             }
         })
-        console.log(scheduleFromDB)
         if (scheduleFromDB.length > 0) {
-            return scheduleFromDB;
-        } else {
-            const scheduleData = []
-            const parsedSchedule = await AgpuAPI().getTimeTableByName(name, currentDate);
-            const nowDate = currentDateRound(currentDate)
-            const day = parsedSchedule.find((day) => stringToDate(day.date) === nowDate.getTime())
-            if (day) {
-                for (let i = 0; i < day.times.length; i++) {
-                    const timeSlot = day.times[i];
-                    const lessons = timeSlot.lessons;
-                    for (let j = 0; j < lessons.length; j++) {
-                        const lesson = lessons[j];
+            return scheduleFromDB.map(schedule => schedule.dataValues.id);
+        }
+        const scheduleData = []
+        let result = [];
+        const parsedSchedule = await AgpuAPI().getTimeTableByName(name, currentDate);
+        const nowDate = currentDateRound(currentDate)
+        const day = parsedSchedule.find((day) => stringToDate(day.date) === nowDate.getTime())
+        if (day) {
+            for (let i = 0; i < day.times.length; i++) {
+                const timeSlot = day.times[i];
+                const lessons = timeSlot.lessons;
+                for (let j = 0; j < lessons.length; j++) {
+                    const lesson = lessons[j];
 
-                        const scheduleItem = {
-                            type: lesson.type,
-                            additional: lesson.additional.join('\n'),
-                            lesson: lesson.name,
-                            GroupId: group.id,
-                            date: stringToTime(day.date, timeSlot.time.split('-')[0])
-                        }
-                        scheduleData.push(scheduleItem)
-
+                    const scheduleItem = {
+                        type: lesson.type,
+                        additional: lesson.additional.join('\n'),
+                        lesson: lesson.name,
+                        GroupId: group.id,
+                        date: stringToTime(day.date, timeSlot.time.split('-')[0])
                     }
+                    scheduleData.push(scheduleItem)
+
                 }
             }
-            await sequelize.transaction(async (t) => {
-                const lessonScheduleEntries = [];
-
-                for (let i = 0; i < scheduleData.length; i++) {
-                    const schedule = scheduleData[i]
-                    const {lesson: lessonName, ...restedSchedule} = schedule
-                    await Lesson.findOrCreate({
-                        where: {
-                            name: lessonName
-                        },
-                        transaction: t
-                    })
-                    const createdSchedule = await Schedule.create(restedSchedule, {transaction: t})
-                    lessonScheduleEntries.push({
-                        LessonName: lessonName,
-                        ScheduleId: createdSchedule.id,
-                    });
-
-                }
-
-                await Lesson_has_Schedule.bulkCreate(lessonScheduleEntries, {transaction: t});
-            });
-
-            return parsedSchedule;
         }
+        await sequelize.transaction(async (t) => {
+            const lessonScheduleEntries = [];
+
+            for (let i = 0; i < scheduleData.length; i++) {
+                const schedule = scheduleData[i]
+                const {lesson: lessonName, ...restedSchedule} = schedule
+                await Lesson.findOrCreate({
+                    where: {
+                        name: lessonName
+                    },
+                    transaction: t
+                })
+                const createdSchedule = await Schedule.create(restedSchedule, {transaction: t})
+                lessonScheduleEntries.push({
+                    LessonName: lessonName,
+                    ScheduleId: createdSchedule.id,
+                });
+                result.push(createdSchedule.id)
+            }
+
+            await Lesson_has_Schedule.bulkCreate(lessonScheduleEntries, {transaction: t});
+        });
+        return result
+    }
+
+    async setSchedule(userId, scheduleId) {
+        const schedule = await Schedule.findOne({where:{id: scheduleId}})
+        const user = await User_info.findOne({where: {id: userId}})
+        if(!schedule) {
+            console.log('Schedule not found')
+        }
+        schedule.UserId = userId
+        await schedule.save()
+        return user
     }
 }
 

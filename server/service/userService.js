@@ -34,9 +34,16 @@ class UserService {
     }
 
     async getUsersByGroupName(id) {
-        const group = await Groups.findAll({
+        const group = await Groups.findOne({
             where: {id: id},
+            attributes:[
+                'id',
+                'name'
+            ],
             include: [{
+                attributes:[
+                    'id'
+                ],
                 model: User,
                 required: true,
                 include: [{
