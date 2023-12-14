@@ -1,0 +1,34 @@
+@import '../../configs/colors.scss';
+
+.card {
+    margin-bottom: 20px;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.link {
+    background-color: $ll_gray;
+    display: flex;
+    text-decoration: none;
+    color: $dd_gray;
+    padding: 15px 20px;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 300ms;
+
+    &:hover {
+        background-color: darken($ll_gray, 5);
+    }
+}
+
+.name {
+    margin: 0;
+}
+
+.remove {
+    background-color: $red;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}

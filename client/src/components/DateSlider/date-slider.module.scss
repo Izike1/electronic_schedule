@@ -1,0 +1,25 @@
+@import '../../configs/colors.scss';
+
+.slide {
+    width: 40px;
+    height: 40px;
+    background-color: $ll_blue;
+    color: $dd_gray;
+}
+
+.wrapper {
+    background-color: $ll_blue;
+    padding: 5px 0px;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.date_input {
+    background-color: transparent;
+    border: 0;
+    color: $dd_gray;
+
+    &:focus {
+        outline: none;
+    }
+}

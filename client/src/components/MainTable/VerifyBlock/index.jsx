@@ -1,12 +1,34 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import classes from './verify.module.scss';
-const VerifyBlock = ({ onChange = (e) => { console.log(e) }, isLoading = false, verifiedBy = null, currentUser = { role: 2, userFullName: 'Кто-то ЛОЛ' }, ...props }) => {
-    const handleClick = useEffect(() => {
+import { useAuth } from '../../../hooks/useAuth';
+import { useClassMap } from '../../../hooks/useClassMap';
+import Loading from '../../../ui/Loading';
+const VerifyBlock = ({ onChange = (e) => { console.log(e) }, verifiedBy = null, ...props }) => {
+    const auth = useAuth()
+    const [isLoading, setIsLoading] = useState(false)
+    const handleClick = useCallback(() => {
+        if (verifiedBy !== null) {
+            onChange({
+                type: 'unset'
+            })
+        } else {
+            onChange({
+                type: 'set',
+                name: 'My Name'
+            })
+        }
 
     }, [onChange, verifiedBy])
+    const classNames = useClassMap({
+        [classes.verify_button]: true,
+        [classes.fixed]: (auth.role === 'group' || auth.role === 'headman')
+    })
+
     return <div className={classes.wrap}>
-        <button {...props} onClick={handleClick} className={classes.verify_button + ((verifiedBy !== null || currentUser.role !== 2) ? ` ${classes.fixed}` : '')}>
-            {verifiedBy !== null && verifiedBy}
+        <button {...props} onClick={handleClick} className={classNames()}>
+            {isLoading ?
+                <Loading size="small" />
+                : verifiedBy !== null && verifiedBy}
         </button>
     </div>
 }

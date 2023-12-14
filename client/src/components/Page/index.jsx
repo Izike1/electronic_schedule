@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import classes from './page.module.scss'
 import { useClassMap } from "../../hooks/useClassMap"
 
-const Page = ({ title = "Успеваемость AGPU", hasNav = false, ...props }) => {
+const Page = ({ title = "Посещаемость АГПУ", hasNav = false, ...props }) => {
     useEffect(() => {
         document.title = title
     }, [title])

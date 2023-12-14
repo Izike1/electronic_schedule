@@ -100,7 +100,7 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
                         if (type === 'unknown') {
                             return <Fragment key={type}></Fragment>
                         }
-                        return <Variant key={type} onClick={() => {
+                        return <Variant key={type} onMouseDown={() => {
                             handleSelect(type)
                         }} type={type} />
                     })}

@@ -4,7 +4,7 @@ import SelectAttendance from '../SelectAttendance/index'
 import { attendancesById } from '../../configs/Attendances';
 import VerifyBlock from './VerifyBlock';
 const MainTable = ({ onChangeTable = (data) => console.log(data), data }) => {
-    const [fixedCols, setFixed] = useState([])
+    const [verified, setVerified] = useState([])
     const colSpans = useMemo(() => {
         const colSpans = {
             totalCount: 0,
@@ -23,8 +23,10 @@ const MainTable = ({ onChangeTable = (data) => console.log(data), data }) => {
                 lessons.push({ ...l, time: timeline.time })
             })
         })
+        setVerified(lessons.map(l => l.verifiedBy || null))
         return lessons
     }, [data])
+    const students = useMemo(() => data.students, [data])
     return <div className={classes.wrap}>
         {
             colSpans.totalCount > 0 ? <table className={classes.main}>
@@ -48,23 +50,21 @@ const MainTable = ({ onChangeTable = (data) => console.log(data), data }) => {
                                         </span>
                                         )}
                                     </div>
-
                                 </th>
                             })
                         }
                     </tr>
                 </thead>
                 <tbody>
-                    {data.students.map((s, studentIndex) => {
+                    {students.map((s, studentIndex) => {
                         const fullName = `${s.lastName} ${s.firstName.slice(0, 1)}.${s.middleName ? ` ${s.middleName.slice(0, 1)}.` : ''}`
                         return <tr key={fullName}>
-
                             <td className={classes.left_col}>{fullName}</td>
                             {s.states.map((state, stateIndex) => {
                                 return <td key={fullName + lessons[stateIndex].name.join(' ') + lessons[stateIndex].time}>
 
-                                    <SelectAttendance hintPos={(data.students.length / 2 > studentIndex) ? 'bottom' : 'top'}
-                                        fixed={lessons[stateIndex].verifiedBy !== null}
+                                    <SelectAttendance hintPos={(students.length / 2 > studentIndex) ? 'bottom' : 'top'}
+                                        fixed={verified[stateIndex] !== null}
                                         value={attendancesById[state]} onChange={(t) => {
                                             const data = {
                                                 status: t,
@@ -83,9 +83,23 @@ const MainTable = ({ onChangeTable = (data) => console.log(data), data }) => {
                     })}
                     <tr>
                         <td className={classes.left_col} >Подпись</td>
-                        {lessons.map((l) => {
+                        {lessons.map((l, i) => {
                             return <td key={l.name.join(' ') + l.time}>
-                                <VerifyBlock verifiedBy={l.verifiedBy}></VerifyBlock>
+                                <VerifyBlock onChange={(e) => {
+                                    if (e.type === 'unset') {
+                                        setVerified((prev) => {
+                                            const clone = [...prev]
+                                            clone[i] = null
+                                            return clone
+                                        })
+                                    } else {
+                                        setVerified((prev) => {
+                                            const clone = [...prev]
+                                            clone[i] = e.name
+                                            return clone
+                                        })
+                                    }
+                                }} verifiedBy={verified[i]}></VerifyBlock>
                             </td>
                         })}
                     </tr>

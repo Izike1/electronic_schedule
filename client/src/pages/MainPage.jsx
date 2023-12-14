@@ -6,6 +6,7 @@ import Button from "../ui/Button"
 import Loading from "../ui/Loading"
 import Modal from "../ui/Modal"
 import Page from "../components/Page"
+import SelectAttendance from "../components/SelectAttendance"
 
 
 const MainPage = () => {
@@ -14,6 +15,7 @@ const MainPage = () => {
     const [modalActive, setModalActive] = useState(false)
 
     return <Page hasNav >
+        <SelectAttendance />
         <h1>Hello World</h1>
         <h2>{auth.role}</h2>
         <MainTable data={{
