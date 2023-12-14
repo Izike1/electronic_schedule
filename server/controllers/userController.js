@@ -2,6 +2,15 @@ const userService = require("../service/userService");
 
 class UserController {
 
+    async createUser(req, res, next) {
+        try {
+            const {firstName, lastName, middleName, groupId} = req.body;
+            const user = await userService.createUser(firstName, lastName, middleName, groupId)
+            res.json(user)
+        } catch (e) {
+            next(e)
+        }
+    }
     async getUser(req, res, next) {
         try {
             const { id } = req.query;
