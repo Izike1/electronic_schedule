@@ -4,7 +4,6 @@ import Wrapper from "../../ui/Wrapper";
 import InputText from "../../ui/Inputs/InputText/InputText";
 import Button from "../../ui/Button";
 import Validate from "../../utils/validate";
-import classes from './form-create-group.module.scss'
 import ModalForm from "../ModalForm";
 const FormCreateGroup = ({ onSuccess, facultyId, onError, ...props }) => {
     const { register, handleSubmit, formState } = useForm({

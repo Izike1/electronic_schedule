@@ -4,6 +4,7 @@ export const useFetch = (cb) => {
     const [data, setData] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
+
     useEffect(() => {
         let ignore = false
         setIsLoading(true)
@@ -14,7 +15,7 @@ export const useFetch = (cb) => {
             }
 
         }).catch((e) => {
-            setIsLoading(true)
+            setIsLoading(false)
             setError(e)
         })
 

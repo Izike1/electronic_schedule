@@ -5,7 +5,7 @@ import DateSlider from "../../components/DateSlider"
 import Wrapper from "../../ui/Wrapper"
 import { useCallback } from "react"
 import DelayShow from "../../ui/DelayShow"
-import TestRender from "../../components/TestRender"
+import AttendanceTable from "../../components/AttendanceTable"
 
 const AttendancePage = () => {
     const { id: groupId, date } = useParams()
@@ -17,14 +17,12 @@ const AttendancePage = () => {
 
     }, [navigate, groupId, date])
     return <Page hasNav>
-        <Container>
-            {groupId}
-            <br />
+        <Container style={{ paddingBottom: '40px' }}>
             <Wrapper verticalMargin>
                 <DateSlider onChange={onChangeDate} defaultDate={Number(date)} />
             </Wrapper>
             <DelayShow rerenderDep={date}>
-                <TestRender />
+                <AttendanceTable date={date} />
             </DelayShow>
         </Container>
 

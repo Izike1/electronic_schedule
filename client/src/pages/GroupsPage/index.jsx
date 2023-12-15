@@ -84,10 +84,10 @@ const GroupsPage = (props) => {
 
             <FormCreateGroup facultyId={facultyId} onSuccess={(data) => {
                 setActiveCreateModal(false)
-                setGroups((p) => [{
+                createGroup({
                     name: data.name,
                     id: data.id
-                }, ...p])
+                })
             }} />
         </Modal>
     </Page>

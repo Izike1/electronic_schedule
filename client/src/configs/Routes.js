@@ -3,7 +3,6 @@ import AttendanceRedirector from '../pages/AttendancePage/AttedanceRedirector'
 import FacultiesPage from '../pages/FacultiesPage'
 import GroupsPage from '../pages/GroupsPage'
 import LoginPage from '../pages/LoginPage'
-import MainPage from '../pages/MainPage'
 export const RoutesConfig = {
     public: {
         pages: [
@@ -17,10 +16,6 @@ export const RoutesConfig = {
     private: {
         'admin': {
             pages: [
-                {
-                    path: '/',
-                    component: <MainPage />
-                },
                 {
                     path: '/faculties',
                     component: <FacultiesPage />
@@ -38,7 +33,7 @@ export const RoutesConfig = {
                     component: <AttendancePage />
                 }
             ],
-            redirect: '/'
+            redirect: '/faculties'
         }
     }
 }
