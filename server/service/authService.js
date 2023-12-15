@@ -1,19 +1,20 @@
-const { Auth } = require('../models/models')
+const {Auth} = require('../models/models')
 const tokenService = require('./tokenService')
 const AuthDto = require('../dtos/authDto')
 const ApiError = require('../error/ApiError')
-const { writeToLogFile } = require('../logger/index')
+const {Op} = require('sequelize')
+const {writeToLogFile} = require('../logger/index')
 
 class AuthService {
     async registration(login, password, role) {
-        const candidate = await Auth.findOne({ where: { login: login } })
+        const candidate = await Auth.findOne({where: {login: login}})
         if (candidate) {
             writeToLogFile(`Ошибка при регистрации ${candidate}`)
             throw ApiError.badRequest('Пользователь с таким именем уже существует')
         }
-        const auth = await Auth.create({ login, role, password })
+        const auth = await Auth.create({login, role, password})
         const authDto = new AuthDto(auth);
-        const tokens = tokenService.generateToken({ ...authDto });
+        const tokens = tokenService.generateToken({...authDto});
         await tokenService.saveToken(authDto.id, tokens.refreshToken);
         return {
             ...tokens,
@@ -22,13 +23,13 @@ class AuthService {
     }
 
     async login(login, password) {
-        const candidate = await Auth.findOne({ where: { login: login } })
+        const candidate = await Auth.findOne({where: {login: login}})
         if (!candidate || password !== candidate.password) {
             writeToLogFile(`Ошибка при входе ${candidate.login}`)
             throw ApiError.badRequest('Ошибка при входе')
         }
         const authDto = new AuthDto(candidate);
-        const tokens = tokenService.generateToken({ ...authDto })
+        const tokens = tokenService.generateToken({...authDto})
         await tokenService.saveToken(authDto.id, tokens.refreshToken);
         writeToLogFile(`Выполнен вход ${candidate.login}`)
         return {
@@ -51,9 +52,9 @@ class AuthService {
         if (!authData || !tokenFromDb) {
             throw ApiError.unauthorizedError()
         }
-        const candidate = await Auth.findOne({ where: { id: authData.id } });
+        const candidate = await Auth.findOne({where: {id: authData.id}});
         const authDto = new AuthDto(candidate);
-        const tokens = tokenService.generateToken({ ...authDto })
+        const tokens = tokenService.generateToken({...authDto})
         await tokenService.saveToken(authDto.id, tokens.refreshToken);
 
         return {
@@ -61,6 +62,27 @@ class AuthService {
             auth: authDto
         }
     }
+
+    async delete(id){
+
+    }
+
+    async getAuths() {
+        return await Auth.findAll()
+    }
+
+    async getAuthsByChunks(chunkSize, pageNumber, search) {
+        const offset = (pageNumber - 1) * chunkSize;
+        console.log(typeof search)
+        return await Auth.findAll({
+            offset: Number(offset),
+            limit: Number(chunkSize),
+            where: {
+                login: {[Op.like]: `%${search}%`}
+            }
+        });
+    }
+
 }
 
 module.exports = new AuthService();
