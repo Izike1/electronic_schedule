@@ -7,7 +7,6 @@ import EmptyFaculty from "../../components/FacultyCard/EmptyFaculty"
 import Modal from "../../ui/Modal"
 import FormCreateFaculty from "../../forms/FormCreateFaculty/FormCreateFaculty"
 import { useAuth } from "../../hooks/useAuth"
-import FixedButton from "../../ui/FixedButton"
 
 const FacultiesPage = (props) => {
     const [faculties, setFaculties] = useState(([{
@@ -41,7 +40,6 @@ const FacultiesPage = (props) => {
 
             </FormCreateFaculty>
         </Modal>
-        <FixedButton onClick={() => console.log('clicked')}></FixedButton>
         <Container>
             <Wrapper verticalMargin justify="between">
 

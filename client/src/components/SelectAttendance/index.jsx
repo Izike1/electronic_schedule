@@ -8,14 +8,15 @@ import List from '../../ui/List'
 import classes from './select.module.scss'
 import Variant from './Variant'
 import Loading from '../../ui/Loading'
+import { updateAttendance } from '../../api/Test/devSelectAttendance'
 
-const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value = null, ...props }) => {
+const SelectAttendance = ({ onChange, student = 1, schedule = 4, fixed = false, hintPos = 'bottom', value = null, ...props }) => {
     const [isHintActive, setHintActive] = useState(false)
     const ref = useRef(null)
     const [selected, setSelected] = useState(value)
     const isMobile = useIsMobile()
-    const [isLoading,] = useState(false) /// setIsLoading
-
+    const [isLoading, setIsLoading] = useState(false)
+    const ignoreLoading = useRef(false)
     const showHint = useCallback((e) => {
         if (fixed) {
             e.preventDefault()
@@ -30,16 +31,22 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
         setHintActive(false)
     }, [])
 
-    const handleChange = useCallback((type) => {
-        if (onChange) {
-            onChange(type)
-        }
-    }, [onChange])
     const handleSelect = useCallback((type) => {
-        setSelected(type)
         setHintActive(false)
-        handleChange(type)
-    }, [setSelected, handleChange])
+        if (type === selected) {
+            return
+        }
+        setIsLoading(true)
+
+        updateAttendance(student, schedule, type).then(() => {
+            setSelected(type)
+        })
+            .catch((e) => {
+                console.log(e)
+            }).finally(() => {
+                setIsLoading(false)
+            })
+    }, [setSelected, student, schedule, selected])
     const handleInput = useCallback((e) => {
         const listOfLetters = {
             'g': 'attended',
@@ -53,15 +60,14 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
             'р': 'order',
         }
         if (e.target.value === '') {
-            handleChange('unknown')
-            setSelected(null)
+            handleSelect('unknown')
         } else if (e.target.value[e.target.value.length - 1].toLowerCase() in listOfLetters) {
 
             handleSelect(listOfLetters[e.target.value[e.target.value.length - 1].toLowerCase()])
             e.target.blur()
         }
 
-    }, [handleSelect, setSelected, handleChange])
+    }, [handleSelect])
     const handleInputClick = useCallback((e) => {
         if (isHintActive) {
             e.preventDefault()
@@ -88,10 +94,10 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
         {isLoading && <div className={classes.loading_wrapper}>
             <Loading white={selected !== null && selected !== 'unknown'} size="small"></Loading>
         </div>}
-        <InputBlock disabled={fixed} style={{
+        <InputBlock disabled={fixed || isLoading} style={{
             backgroundColor: (selected !== null && selected !== 'unknown') ? attendancesColor[selected] : undefined,
             color: (selected !== null && selected !== 'unknown') ? 'white' : undefined
-        }} value={selected !== null ? attendancesShortRu[selected] : ''} onBlur={hideHint} onChange={handleInput} onMouseDown={handleInputClick} onFocus={showHint} />
+        }} value={(selected !== null && selected !== 'unknown' && !isLoading) ? attendancesShortRu[selected] : ''} onBlur={hideHint} onChange={handleInput} onMouseDown={handleInputClick} onFocus={showHint} />
 
         <Hint position={hintPos} active={isHintActive}>
             <DelayRemove delay={200} visible={isHintActive}>
@@ -100,11 +106,11 @@ const SelectAttendance = ({ onChange, fixed = false, hintPos = 'bottom', value =
                         if (type === 'unknown') {
                             return <Fragment key={type}></Fragment>
                         }
-                        return <Variant key={type} onClick={() => {
+                        return <Variant key={type} onMouseDown={() => {
                             handleSelect(type)
                         }} type={type} />
                     })}
-                    <Variant onClick={() => {
+                    <Variant onMouseDown={() => {
                         handleSelect('unknown')
                     }} type={'unknown'} />
 

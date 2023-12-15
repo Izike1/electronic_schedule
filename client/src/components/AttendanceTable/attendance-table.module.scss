@@ -1,7 +1,6 @@
 @import '../../configs/colors.scss';
 
 .wrap {
-    max-width: 1200px;
     margin: 0 10px;
     max-height: 90vh;
     overflow: auto;
@@ -26,6 +25,12 @@
         background-color: $ll_gray;
 
     }
+}
+
+.loading_wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .lesson_name {

@@ -71,7 +71,13 @@ class Validate {
         if (typeof this.value !== 'string') {
             return false
         }
-        return /^[ \-()_,.A-ZА-ЯЁа-яёa-z0-9]{1,255}$/s.test(this.value)
+        return /^[/\\ \-()_,.A-ZА-ЯЁа-яёa-z0-9]{1,255}$/s.test(this.value)
+    }
+    validGroup() {
+        if (typeof this.value !== 'string') {
+            return false
+        }
+        return /^[/\\ \-()_,.A-ZА-ЯЁа-яёa-z0-9]{1,255}$/s.test(this.value)
     }
     validLastName() {
         if (typeof this.value !== 'string') {
