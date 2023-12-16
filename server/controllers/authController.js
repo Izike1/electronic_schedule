@@ -4,9 +4,9 @@ const {writeToLogFile} = require("../logger");
 class AuthController {
     async registration(req, res, next) {
         try {
-            const {login, password, role} = req.body;
+            const {login, password, role, firstName, lastName, middleName, groupId, authId} = req.body;
             const ip = req.user.login;
-            const authData = await authService.registration(login, password, role)
+            const authData = await authService.registration(login, password, role, firstName, lastName, middleName, groupId, authId)
             this.sendRefreshTokenCookie(res, authData.refreshToken)
             writeToLogFile(`Регистрация ${login},${ip}`)
             return res.json(authData)

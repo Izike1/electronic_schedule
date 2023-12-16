@@ -1,12 +1,13 @@
 const {Auth} = require('../models/models')
 const tokenService = require('./tokenService')
+const userService = require('./userService')
 const AuthDto = require('../dtos/authDto')
 const ApiError = require('../error/ApiError')
 const {Op} = require('sequelize')
 const {writeToLogFile} = require('../logger/index')
 
 class AuthService {
-    async registration(login, password, role) {
+    async registration(login, password, role, firstName, lastName, middleName, groupId, authId) {
         const candidate = await Auth.findOne({where: {login: login}})
         if (candidate) {
             writeToLogFile(`Ошибка при регистрации ${candidate}`)
@@ -15,10 +16,12 @@ class AuthService {
         const auth = await Auth.create({login, role, password})
         const authDto = new AuthDto(auth);
         const tokens = tokenService.generateToken({...authDto});
+        const user = await userService.createUser(firstName, lastName, middleName, groupId, authId)
         await tokenService.saveToken(authDto.id, tokens.refreshToken);
         return {
             ...tokens,
-            auth: authDto
+            auth: authDto,
+            user
         }
     }
 
@@ -63,7 +66,7 @@ class AuthService {
         }
     }
 
-    async delete(id){
+    async delete(id) {
 
     }
 
