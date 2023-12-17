@@ -1,6 +1,6 @@
 Обязательные id
-Студент - user-info-id , group-id
-Староста (зам. старосты) - user-info-id , auth-id,group-id
-Груповой аккаунт - auth-id,group-id
-Декан - auth-id,user-info-id
-Админ - auth-id         
+Студент(student) - user-info-id , group-id
+Староста (зам. старосты) (headman)  - user-info-id , auth-id,group-id
+Груповой аккаунт (group)- auth-id,group-id
+Декан (dean) - auth-id,user-info-id
+Админ (admin)- auth-id         
