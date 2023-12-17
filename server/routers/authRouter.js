@@ -9,7 +9,7 @@ router.post('/login', authController.login.bind(authController))
 router.post('/logout', authMiddleware(), authController.logout)
 router.post('/refresh', authMiddleware(), authController.refresh.bind(authController))
 
-router.get('/getAuth', authController.getAuths)
-router.get('/getAuthByChunk', authController.getAuthsByChunks)
+router.get('/getAuth', authMiddleware(), roleMiddlewareCreator(['admin']), authController.getAuths)
+router.get('/getAuthByChunk', authMiddleware(), roleMiddlewareCreator(['admin']), authController.getAuthsByChunks)
 
 module.exports = router
