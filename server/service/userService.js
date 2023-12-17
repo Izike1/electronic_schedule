@@ -2,7 +2,7 @@ const {User, Groups, User_info, Faculty} = require('../models/models');
 const ApiError = require('../error/ApiError');
 
 class UserService {
-    async createUser(firstName, lastName, middleName, groupId) {
+    async createUser(firstName, lastName, middleName, groupId, authId) {
         const candidate = await User_info.findOne({
             where: {
                 first_name: firstName,
@@ -18,7 +18,18 @@ class UserService {
             first_name: firstName,
             last_name: lastName,
             middle_name: middleName,})
-        const user = await User.create({UserInfoId: userInfo.id, GroupId: groupId})
+        let user;
+        const userData = { UserInfoId: userInfo.id };
+
+        if (groupId !== null) {
+            userData.GroupId = groupId;
+        }
+
+        if (authId !== null) {
+            userData.AuthId = authId;
+        }
+
+        user = await User.create(userData);
         return {
             userInfo,
             user

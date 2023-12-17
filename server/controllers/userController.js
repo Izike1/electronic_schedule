@@ -4,16 +4,17 @@ class UserController {
 
     async createUser(req, res, next) {
         try {
-            const {firstName, lastName, middleName, groupId} = req.body;
-            const user = await userService.createUser(firstName, lastName, middleName, groupId)
+            const {firstName, lastName, middleName, groupId, authId} = req.body;
+            const user = await userService.createUser(firstName, lastName, middleName, groupId, authId)
             res.json(user)
         } catch (e) {
             next(e)
         }
     }
+
     async getUser(req, res, next) {
         try {
-            const { id } = req.query;
+            const {id} = req.query;
             const userData = await userService.getUser(id);
             res.json(userData);
         } catch (e) {
