@@ -28,11 +28,11 @@ class TokenService {
     }
 
     async saveToken(authId, refreshToken) {
-        const tokenData = await Token.findOne({where: {authId: authId}})
-        if (tokenData) {
-            tokenData.refreshToken = refreshToken;
-            return tokenData.save();
-        }
+        // const tokenData = await Token.findOne({where: {authId: authId}})
+        // if (tokenData) {
+        //     tokenData.refreshToken = refreshToken;
+        //     return tokenData.save();
+        // }
         const token = await Token.create({AuthId: authId, refreshToken})
         return {token};
     }

@@ -7,7 +7,7 @@ class UserService {
             where: {
                 first_name: firstName,
                 last_name: lastName,
-                middle_name: middleName,
+                middle_name: middleName||null,
 
             }
         })

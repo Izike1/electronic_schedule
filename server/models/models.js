@@ -18,8 +18,8 @@ const User = sequelize.define('User', {
 })
 const User_info = sequelize.define('User_info', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    first_name: {type: DataTypes.STRING},
     last_name: {type: DataTypes.STRING, notNull: true},
+    first_name: {type: DataTypes.STRING},
     middle_name: {type: DataTypes.STRING}
 })
 

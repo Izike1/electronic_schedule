@@ -1,12 +1,12 @@
 const authService = require('../service/authService');
-const {writeToLogFile} = require("../logger");
+const { writeToLogFile } = require("../logger");
 
 class AuthController {
     async registration(req, res, next) {
         try {
-            const {login, password, role, firstName, lastName, middleName, groupId, authId} = req.body;
+            const { login, password, role, firstName, lastName, middleName, groupId } = req.body;
             const ip = req.user.login;
-            const authData = await authService.registration(login, password, role, firstName, lastName, middleName, groupId, authId)
+            const authData = await authService.registration(login, password, role, firstName, lastName, middleName, groupId)
             this.sendRefreshTokenCookie(res, authData.refreshToken)
             writeToLogFile(`Регистрация ${login},${ip}`)
             return res.json(authData)
@@ -17,7 +17,7 @@ class AuthController {
 
     async login(req, res, next) {
         try {
-            const {login, password} = req.body;
+            const { login, password } = req.body;
             const authData = await authService.login(login, password);
             this.sendRefreshTokenCookie(res, authData.refreshToken)
             return res.json(authData)
@@ -28,7 +28,8 @@ class AuthController {
 
     async logout(req, res, next) {
         try {
-            const {refreshToken} = req.cookies;
+            const { refreshToken } = req.cookies;
+
             const token = await authService.logout(refreshToken);
             res.clearCookie('refreshToken');
             return res.json(token);
@@ -39,10 +40,20 @@ class AuthController {
 
     async refresh(req, res, next) {
         try {
-            const {refreshToken} = req.cookies;
+            const { refreshToken } = req.cookies;
             const authData = await authService.refresh(refreshToken)
             this.sendRefreshTokenCookie(res, authData.refreshToken)
             return res.json(authData)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async delete(req, res, next) {
+        try {
+            const { authId } = req.body;
+            const authData = await authService.delete(authId)
+            res.json(authData)
         } catch (e) {
             next(e)
         }
@@ -59,7 +70,7 @@ class AuthController {
 
     async getAuthsByChunks(req, res, next) {
         try {
-            const {chunkSize, pageNumber, search} = req.query;
+            const { chunkSize, pageNumber, search } = req.query;
             const auth = await authService.getAuthsByChunks(chunkSize, pageNumber, search);
             res.json(auth)
         } catch (e) {
@@ -68,7 +79,7 @@ class AuthController {
     }
 
     sendRefreshTokenCookie(res, refreshToken) {
-        res.cookie('refreshToken', refreshToken, {maxAge: 30 * 24 * 60 * 60 * 100, httpOnly: true});
+        res.cookie('refreshToken', refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'none', secure: true });
     }
 }
 

@@ -13,7 +13,7 @@ class FacultyController {
 
     async getFaculties(req, res, next) {
         try {
-            const faculty = facultyService.getFaculties()
+            const faculty = await facultyService.getFaculties()
             res.json(faculty)
         } catch (e) {
             next(e)
