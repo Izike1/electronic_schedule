@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "devparser": "node ./TestParser/index.js"
+    "devparser": "node ./TestParser/index.js",
+    "fix_table": "node ./utils/fixTable.js"
   },
   "keywords": [],
   "author": "",
