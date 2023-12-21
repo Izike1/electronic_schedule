@@ -5,10 +5,9 @@ class AuthController {
     async registration(req, res, next) {
         try {
             const { login, password, role, firstName, lastName, middleName, groupId } = req.body;
-            const ip = req.user.login;
             const authData = await authService.registration(login, password, role, firstName, lastName, middleName, groupId)
             this.sendRefreshTokenCookie(res, authData.refreshToken)
-            writeToLogFile(`Регистрация ${login},${ip}`)
+            writeToLogFile(`Регистрация ${login}`)
             return res.json(authData)
         } catch (e) {
             next(e);

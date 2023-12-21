@@ -3,7 +3,7 @@ const { default: axios } = require("axios")
 const { stringToDate, dateToStartWeek } = require('../../utils/dateUtil')
 
 // 'ВМ-ИВТ-3-1'
-const agpuURL = 'http://www.it-institut.ru'
+const agpuURL = 'https://www.it-institut.ru'
 const lessonInfoParser = (lessonInfo) => {
     let [lessonName, ...additional] = lessonInfo
     let splitIndex = lessonName.lastIndexOf(',')
@@ -72,8 +72,9 @@ const AgpuAPI = (clientId = 118) => {
                     SearchProductName: name
                 }
             })
+            console.log(groupsRespons)
             if (groupsRespons.data.length <= 0) {
-                throw new Error('Группа не найдена')
+                throw new ApiError('Группа не найдена')
             }
             return groupsRespons.data[0].SearchId
         },

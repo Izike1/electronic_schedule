@@ -5,7 +5,7 @@ class GroupController {
     async createGroup(req, res, next) {
         try {
             const { groupName, facultyId } = req.body;
-            const group = groupService.createGroup(groupName, facultyId)
+            const group = await groupService.createGroup(groupName, facultyId)
             res.json(group)
         } catch (e) {
             next(e)
@@ -15,7 +15,7 @@ class GroupController {
     async changeGroup(req, res, next) {
         try {
             const { groupName, groupId, facultyId } = req.body;
-            const group = groupService.changeGroup(groupName, groupId, facultyId)
+            const group = await groupService.changeGroup(groupName, groupId, facultyId)
             res.json(group)
         } catch (e) {
             next(e)
@@ -24,7 +24,7 @@ class GroupController {
 
     async getGroups(req, res, next) {
         try {
-            const groups = groupService.getGroups();
+            const groups = await groupService.getGroups();
             res.json(groups)
         } catch (e) {
             next(e)
@@ -44,7 +44,7 @@ class GroupController {
     async getGroupsByFaculty(req, res, next) {
         try {
             const { id } = req.query;
-            const group = groupService.getGroupsByFaculty(id)
+            const group = await groupService.getGroupsByFaculty(id)
             res.json(group)
         } catch (e) {
             next(e)
@@ -54,7 +54,7 @@ class GroupController {
     async removeGroup(req, res, next) {
         try {
             const { id } = res.body;
-            const group = groupService.removeGroup(id)
+            const group = await groupService.removeGroup(id)
             res.json(group)
         } catch (e) {
             next(e)

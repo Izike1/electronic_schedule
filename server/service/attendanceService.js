@@ -15,7 +15,7 @@ class AttendanceService {
         let attendances = []
         const groupName = await Groups.findOne({where: {id: groupId}});
         if (!groupName) {
-            console.log('Error finding group name');
+            console.log('Группа не найдена');
             return schedules;
         }
         const user = await userService.getUsersByGroupName(groupId);
@@ -24,8 +24,8 @@ class AttendanceService {
             const scheduleItem = schedule[i];
             const scheduleSlot = await Schedule.findOne({where: {id: scheduleItem}});
             if (scheduleSlot) {
-                const type = scheduleSlot.dataValues.type !== undefined ? scheduleSlot.dataValues.type : 'Unknown';
-                const userId = scheduleSlot.dataValues.userId !== undefined ? scheduleSlot.dataValues.userId : 'Unknown';
+                const type = scheduleSlot.dataValues.type !== undefined ? scheduleSlot.dataValues.type : 'unknown';
+                const userId = scheduleSlot.dataValues.userId !== undefined ? scheduleSlot.dataValues.userId : 'unknown';
                 const scheduleData = {
                     id: scheduleItem,
                     type: type,

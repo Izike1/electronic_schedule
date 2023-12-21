@@ -33,6 +33,7 @@ class ScheduleService {
         }
         const scheduleData = []
         let result = [];
+        console.log(name,currentDate)
         const parsedSchedule = await AgpuAPI().getTimeTableByName(name, currentDate);
         const nowDate = currentDateRound(currentDate)
         const day = parsedSchedule.find((day) => stringToDate(day.date) === nowDate.getTime())

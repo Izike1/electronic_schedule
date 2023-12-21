@@ -36,7 +36,7 @@ class GroupService {
     }
 
     async getGroupsByFaculty(id) {
-        return await Groups.findOne({ where: { facultyId: id } })
+        return await Groups.findAll({ where: { facultyId: id } })
     }
 
     async removeGroup(groupId) {
