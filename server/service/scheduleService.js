@@ -51,6 +51,13 @@ class ScheduleService {
             writeToLogFile('Ошибка получения группы')
             throw ApiError.badRequest('Ошибка получения группы')
         }
+        const curProcessName = group.id + ' ' + getDateRange(currentDate).map((d) => d.getTime()).join(' ')
+        if (processHelper.isInProcess(curProcessName)) {
+            await processHelper.waitProcess(curProcessName)
+        }
+
+
+
         const scheduleFromDB = await Schedule.findAll({
             where: {
                 GroupId: group.id,
@@ -62,8 +69,6 @@ class ScheduleService {
         if (scheduleFromDB.length > 0) {
             return scheduleFromDB.map(schedule => schedule.dataValues.id);
         }
-        const curProcessName = name + ' ' + getDateRange(currentDate).map((d) => d.getTime()).join(' ')
-        await processHelper.waitProcess(curProcessName)
         const process = processHelper.createProcess(curProcessName)
         try {
             const scheduleData = []
