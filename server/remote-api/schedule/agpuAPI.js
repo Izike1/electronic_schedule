@@ -1,6 +1,7 @@
 const { parse } = require('node-html-parser')
 const { default: axios } = require("axios")
 const { stringToDate, dateToStartWeek } = require('../../utils/dateUtil')
+const ApiError = require('../../error/ApiError')
 
 // 'ВМ-ИВТ-3-1'
 const agpuURL = 'https://www.it-institut.ru'
@@ -74,7 +75,7 @@ const AgpuAPI = (clientId = 118) => {
             })
             console.log(groupsRespons)
             if (groupsRespons.data.length <= 0) {
-                throw new ApiError('Группа не найдена')
+                throw ApiError.badRequest("Неверная дата")
             }
             return groupsRespons.data[0].SearchId
         },
@@ -106,7 +107,7 @@ const AgpuAPI = (clientId = 118) => {
         async getTimeTableById(groupId, date = new Date()) {
             const weekInfo = await this.getWeekByDate(date)
             if (!weekInfo) {
-                throw new Error("Неверная дата")
+                throw ApiError.badRequest("Неверная дата")
             }
             const timeTable = parseTimeTable(await this.requestTimeTable(groupId, weekInfo.id))
             return timeTable
