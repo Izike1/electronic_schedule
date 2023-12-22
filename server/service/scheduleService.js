@@ -10,15 +10,15 @@ class ScheduleService {
     async getSchedule(name, currentDate) {
         currentDate = Number(currentDate)
         if (currentDate > new Date(Date.now()).setHours(23)) {
-            console.log('Error time')
-            writeToLogFile('Time error for getSchedule')
-            throw ApiError.badRequest('Time error')
+            console.log('Ошибка даты')
+            writeToLogFile('Ошибка даты')
+            throw ApiError.badRequest('Ошибка даты')
         }
         const group = await Groups.findOne({where: {name: name}})
         if (!group) {
-            console.log('Error group')
-            writeToLogFile('Group find error for getSchedule')
-            throw ApiError.badRequest('Group find error')
+            console.log('Ошибка получения группы')
+            writeToLogFile('Ошибка получения группы')
+            throw ApiError.badRequest('Ошибка получения группы')
         }
         const scheduleFromDB = await Schedule.findAll({
             where: {
@@ -33,7 +33,6 @@ class ScheduleService {
         }
         const scheduleData = []
         let result = [];
-        console.log(name,currentDate)
         const parsedSchedule = await AgpuAPI().getTimeTableByName(name, currentDate);
         const nowDate = currentDateRound(currentDate)
         const day = parsedSchedule.find((day) => stringToDate(day.date) === nowDate.getTime())
@@ -85,7 +84,9 @@ class ScheduleService {
         const schedule = await Schedule.findOne({where:{id: scheduleId}})
         const user = await User_info.findOne({where: {id: userId}})
         if(!schedule) {
-            console.log('Schedule not found')
+            console.log('Расписание не найденно')
+            writeToLogFile('Расписание не найденно')
+            throw ApiError.badRequest('Расписание не найденно')
         }
         schedule.UserId = userId
         await schedule.save()

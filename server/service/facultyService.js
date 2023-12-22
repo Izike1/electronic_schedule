@@ -1,11 +1,13 @@
 const {Faculty} = require('../models/models')
 const {ApiError} = require('../error/ApiError')
+const {writeToLogFile} = require("../logger");
 
 class FacultyService {
     async createFaculty(facultyName) {
-        const faculty = await Faculty.findAll({where: {name: facultyName}})
+        const faculty = await Faculty.findOne({where: {name: facultyName}})
         if (faculty) {
-            console.log('Факультет не создан');
+            writeToLogFile(`Факультет существует ${facultyName}`)
+            console.log('Факультет существует');
         }
         return await Faculty.create({name: facultyName})
     }
@@ -13,6 +15,7 @@ class FacultyService {
     async changeFaculty(id, facultyName) {
         const faculty = await Faculty.findOne({where: {id: id}})
         if (!faculty) {
+            writeToLogFile(`Факультет не существует`)
             throw ApiError.badRequest('Факультета не существует')
         }
         faculty.name = facultyName
@@ -21,10 +24,12 @@ class FacultyService {
     }
 
     async getFaculties() {
+        writeToLogFile(`Получение факультетов`)
         return await Faculty.findAll()
     }
 
     async deleteFaculty(id) {
+        writeToLogFile(`Удаление факультета id - ${id}`)
         return await Faculty.destroy({where: {id: id}})
     }
 }

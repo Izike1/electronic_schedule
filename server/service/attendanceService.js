@@ -1,7 +1,8 @@
-const {Attendance, Schedule, Groups} = require('../models/models')
+const {Attendance, Schedule, Groups, User_info, Lesson_has_Schedule} = require('../models/models')
 const userService = require('../service/userService')
 const scheduleService = require('./scheduleService')
 const {writeToLogFile} = require("../logger");
+const {stringToTime} = require('../utils/dateUtil')
 
 class AttendanceService {
     async createAttendance(status, userId, scheduleId) {
@@ -15,6 +16,7 @@ class AttendanceService {
         let attendances = []
         const groupName = await Groups.findOne({where: {id: groupId}});
         if (!groupName) {
+            writeToLogFile(`Группа не найдена`)
             console.log('Группа не найдена');
             return schedules;
         }
@@ -26,14 +28,20 @@ class AttendanceService {
             if (scheduleSlot) {
                 const type = scheduleSlot.dataValues.type !== undefined ? scheduleSlot.dataValues.type : 'unknown';
                 const userId = scheduleSlot.dataValues.userId !== undefined ? scheduleSlot.dataValues.userId : 'unknown';
+                const lessonName = await Lesson_has_Schedule.findOne(
+                    {
+                        where: {ScheduleId: scheduleItem}
+                    })
                 const scheduleData = {
                     id: scheduleItem,
                     type: type,
+                    lessonName: lessonName,
                     date: scheduleSlot.dataValues.date,
                     userId: userId,
                     groupId: scheduleSlot.dataValues.GroupId,
                     additional: scheduleSlot.dataValues.additional
                 };
+                scheduleData.lessonName = lessonName.LessonName
                 schedules.push(scheduleData);
             }
             const attendance = await Attendance.findOne({where: {ScheduleId: scheduleItem}})
@@ -42,7 +50,8 @@ class AttendanceService {
         result.schedules = schedules
         result.students = user.dataValues.Users
         result.attendances = attendances
-        writeToLogFile(`Получение таблицы посещения ${currentDate}`)
+        const time = new Date(Number(currentDate))
+        writeToLogFile(`Получение таблицы посещения ${time}`)
         return result;
     }
 

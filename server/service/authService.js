@@ -70,6 +70,7 @@ class AuthService {
     }
 
     async delete(authId) {
+        writeToLogFile(`Удаление пользователя ${authId}`)
         return await sequelize.transaction(async (t) => {
             await User.destroy({
                 where: { AuthId: authId },
@@ -89,12 +90,13 @@ class AuthService {
     }
 
     async getAuths() {
+        writeToLogFile(`Получение пользователей`)
         return await Auth.findAll()
     }
 
     async getAuthsByChunks(chunkSize, pageNumber, search) {
         const offset = (pageNumber - 1) * chunkSize;
-        console.log(typeof search)
+        writeToLogFile(`Получение пользователей chunk`)
         return await Auth.findAll({
             offset: Number(offset),
             limit: Number(chunkSize),

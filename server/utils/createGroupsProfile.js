@@ -1,4 +1,5 @@
 const { Auth, User, Groups } = require('../models/models');
+const {rusToLogin} = require('./rusToLatin')
 async function registerGroupsInAuthAndUser() {
 
         const allGroups = await Groups.findAll({
@@ -11,9 +12,9 @@ async function registerGroupsInAuthAndUser() {
 
 
             const password = Math.floor(1000000 + Math.random() * 9000000).toString();
-
+            const rusLogin = rusToLogin(groupName)
             const createdAuth = await Auth.create({
-                login: groupName,
+                login: rusLogin,
                 password: password,
                 role: 'group'
             });

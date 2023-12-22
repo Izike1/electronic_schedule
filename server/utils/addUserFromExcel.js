@@ -4,7 +4,7 @@ const path = require('path')
 
 async function addUserFromExcel() {
 
-    const filePath = path.join(__dirname, '..', '/studentList/studentList.xlsx');
+    const filePath = path.join(__dirname, '..', '/studentList/fixedList.xlsx');
     const workbook = new Excel.Workbook();
     workbook.xlsx.readFile(filePath)
         .then(async () => {

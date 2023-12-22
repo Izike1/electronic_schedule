@@ -1,5 +1,6 @@
 const {User, Groups, User_info, Faculty} = require('../models/models');
 const ApiError = require('../error/ApiError');
+const {writeToLogFile} = require('../logger/index')
 
 class UserService {
     async createUser(firstName, lastName, middleName, groupId, authId) {
@@ -7,7 +8,7 @@ class UserService {
             where: {
                 first_name: firstName,
                 last_name: lastName,
-                middle_name: middleName||null,
+                middle_name: middleName || null,
 
             }
         })
@@ -17,9 +18,10 @@ class UserService {
         const userInfo = await User_info.create({
             first_name: firstName,
             last_name: lastName,
-            middle_name: middleName,})
+            middle_name: middleName,
+        })
         let user;
-        const userData = { UserInfoId: userInfo.id };
+        const userData = {UserInfoId: userInfo.id};
 
         if (groupId !== null) {
             userData.GroupId = groupId;
@@ -28,7 +30,7 @@ class UserService {
         if (authId !== null) {
             userData.AuthId = authId;
         }
-
+        writeToLogFile(`Создание пользователя ${firstName}`)
         user = await User.create(userData);
         return {
             userInfo,
@@ -38,6 +40,7 @@ class UserService {
 
     async getUser(id) {
         const user = await User.findOne({where: {id: id}});
+        writeToLogFile(`Получение пользователя ${id}`)
         if (!user) {
             throw ApiError.badRequest('Пользователь не найден');
         }
@@ -47,12 +50,12 @@ class UserService {
     async getUsersByGroupName(id) {
         const group = await Groups.findOne({
             where: {id: id},
-            attributes:[
+            attributes: [
                 'id',
                 'name'
             ],
             include: [{
-                attributes:[
+                attributes: [
                     'id'
                 ],
                 model: User,
@@ -69,6 +72,7 @@ class UserService {
         if (!group) {
             throw ApiError.badRequest('Группа не найдена')
         }
+        writeToLogFile(`Получение пользователей ${group.name}`)
         return group
     }
 
@@ -90,6 +94,7 @@ class UserService {
         if (!faculty) {
             throw ApiError.badRequest('Группа не найдена')
         }
+        writeToLogFile(`Получение пользователей ${faculty.name}`)
         return faculty
     }
 
@@ -98,6 +103,7 @@ class UserService {
         if (!user) {
             throw ApiError.badRequest('Пользователь не найден');
         }
+        writeToLogFile(`Удаление пользователя ${id}`)
         return await User.destroy({where: {id: id}})
     }
 }

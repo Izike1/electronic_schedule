@@ -73,7 +73,6 @@ const AgpuAPI = (clientId = 118) => {
                     SearchProductName: name
                 }
             })
-            console.log(groupsRespons)
             if (groupsRespons.data.length <= 0) {
                 throw ApiError.badRequest("Неверная дата")
             }

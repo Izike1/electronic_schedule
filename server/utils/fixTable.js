@@ -7,7 +7,7 @@ const replaceStart = (str, start, replace) => {
 
 const start = async () => {
 
-    const filePath = path.join(__dirname, './fixedList.xlsx');
+    const filePath = path.join(__dirname, '..', '/studentList/fixedList.xlsx');
     const workbook = new Excel.Workbook();
     await workbook.xlsx.readFile(filePath)
     const worksheet = workbook.getWorksheet('Students');

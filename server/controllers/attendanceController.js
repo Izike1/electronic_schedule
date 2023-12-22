@@ -15,7 +15,6 @@ class AttendanceController {
         try {
             const { groupId, currentDate } = req.query;
             const attendance = await attendanceService.getAttendance(groupId, currentDate)
-            console.log(attendance)
             res.json(attendance)
         } catch (e) {
             next(e)
