@@ -14,8 +14,18 @@ class ScheduleController {
     async setSchedule(req, res, next) {
         try {
             const {scheduleId} = req.body;
-            const {userId} = req.user;
-            const schedule = await scheduleService.setSchedule(userId, scheduleId);
+            const {id} = req.user;
+            const schedule = await scheduleService.setSchedule(id, scheduleId);
+            res.json(schedule)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async unsetSchedule(req,res,next){
+        try {
+            const {scheduleId}=req.body;
+            const schedule = await scheduleService.unsetSchedule(scheduleId);
             res.json(schedule)
         } catch (e) {
             next(e)

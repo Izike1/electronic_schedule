@@ -1,14 +1,54 @@
-const {Attendance, Schedule, Groups, User_info, Lesson_has_Schedule} = require('../models/models')
+const {Attendance, Schedule, Groups, User, Lesson_has_Schedule, User_info} = require('../models/models')
 const userService = require('../service/userService')
 const scheduleService = require('./scheduleService')
 const {writeToLogFile} = require("../logger");
-const {stringToTime} = require('../utils/dateUtil')
+const {createSyncProcess} = require("../utils/createSyncProcess");
+const ApiError = require('../error/ApiError')
+const processHelper = createSyncProcess()
 
 class AttendanceService {
     async createAttendance(status, userId, scheduleId) {
-        writeToLogFile(`Создание таблицы посещения ${userId}`)
-        return await Attendance.create({status, UserId: userId, ScheduleId: scheduleId})
+        console.log(scheduleId)
+        if (processHelper.isInProcess(userId + ' ' + scheduleId)) {
+            await processHelper.waitProcess(userId + ' ' + scheduleId)
+        }
+        const syncProcess = processHelper.createProcess(userId + ' ' + scheduleId)
+        try {
+            const user = await User.findOne({where: {id: userId}});
+            if (!user) {
+                throw ApiError.badRequest('Студент не найден')
+            }
+            writeToLogFile(`Создание таблицы посещения ${user.id},${new Date()}`);
+
+            const attendanceEntry = await Attendance.findOne({
+                where: {
+                    UserId: user.id,
+                    ScheduleId: scheduleId
+                }
+            });
+
+            if (attendanceEntry) {
+                const updated = await attendanceEntry.update({status: status});
+                syncProcess.endProcess()
+                return updated
+            } else {
+                const newAttendance = await Attendance.create({
+                    status: status,
+                    UserId: user.id,
+                    ScheduleId: scheduleId
+                });
+                syncProcess.endProcess()
+                return newAttendance
+            }
+
+        } catch (e) {
+            syncProcess.endProcess()
+            throw e
+        }
+
+
     }
+
 
     async getAttendance(groupId, currentDate) {
         let result = {}
@@ -26,32 +66,43 @@ class AttendanceService {
             const scheduleItem = schedule[i];
             const scheduleSlot = await Schedule.findOne({where: {id: scheduleItem}});
             if (scheduleSlot) {
-                const type = scheduleSlot.dataValues.type !== undefined ? scheduleSlot.dataValues.type : 'unknown';
-                const userId = scheduleSlot.dataValues.userId !== undefined ? scheduleSlot.dataValues.userId : 'unknown';
+                console.log(scheduleSlot.dataValues.UserId)
+                const type = scheduleSlot.dataValues.type !== undefined ? scheduleSlot.dataValues.type : '';
+                const userId = scheduleSlot.dataValues.UserId !== undefined ? scheduleSlot.dataValues.UserId : null;
+                console.log(userId)
                 const lessonName = await Lesson_has_Schedule.findOne(
                     {
                         where: {ScheduleId: scheduleItem}
+                    })
+                const userInfo = await User.findOne(
+                    {
+                        where: {
+                            id: scheduleSlot.dataValues.UserId
+                        },
+                        include: [{
+                            model: User_info,
+                            required: true
+                        }]
                     })
                 const scheduleData = {
                     id: scheduleItem,
                     type: type,
                     lessonName: lessonName,
                     date: scheduleSlot.dataValues.date,
-                    userId: userId,
+                    userInfo: userInfo?.User_info || null,
                     groupId: scheduleSlot.dataValues.GroupId,
                     additional: scheduleSlot.dataValues.additional
                 };
                 scheduleData.lessonName = lessonName.LessonName
                 schedules.push(scheduleData);
             }
-            const attendance = await Attendance.findOne({where: {ScheduleId: scheduleItem}})
+            const attendance = await Attendance.findAll({where: {ScheduleId: scheduleItem}})
             attendances.push(attendance)
         }
         result.schedules = schedules
         result.students = user.dataValues.Users
         result.attendances = attendances
-        const time = new Date(Number(currentDate))
-        writeToLogFile(`Получение таблицы посещения ${time}`)
+        writeToLogFile(`Получение таблицы посещения ${new Date(Number(currentDate))}`)
         return result;
     }
 

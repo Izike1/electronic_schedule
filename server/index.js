@@ -19,7 +19,6 @@ const app = express();
 app.use(cors(function (req, callback) {
     let corsOptions;
     if (['http://localhost:3000', 'http://192.168.0.16:3000', 'https://localhost:3000', 'https://192.168.0.16:3000'].includes(req.header('Origin'))) {
-        console.log(req.url)
         corsOptions = {
             origin: true,
             credentials: true

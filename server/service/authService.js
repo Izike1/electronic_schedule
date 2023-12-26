@@ -96,7 +96,7 @@ class AuthService {
 
     async getAuthsByChunks(chunkSize, pageNumber, search) {
         const offset = (pageNumber - 1) * chunkSize;
-        writeToLogFile(`Получение пользователей chunk`)
+        writeToLogFile(`Получение пользователей ${search}`)
         return await Auth.findAll({
             offset: Number(offset),
             limit: Number(chunkSize),
@@ -104,6 +104,10 @@ class AuthService {
                 login: { [Op.like]: `%${search}%` }
             }
         });
+    }
+
+    async getAuthsByRoles(roles) {
+
     }
 
 }

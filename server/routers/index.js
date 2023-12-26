@@ -6,8 +6,6 @@ const userRouter = require('./userRouter')
 const groupRouter = require('./groupRouter')
 const facultyRouter = require('./facultyRouter')
 const scheduleRouter = require('./scheduleRouter')
-const authMiddleware = require('../middleware/authMiddleware')
-const roleMiddlewareCreator = require('../middleware/roleMiddlewareCreator')
 
 // authMiddleware(), roleMiddlewareCreator(['admin'])
 
