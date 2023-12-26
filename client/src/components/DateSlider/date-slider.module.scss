@@ -19,6 +19,18 @@
     border: 0;
     color: $dd_gray;
 
+    &::-webkit-clear-button {
+        display: none;
+    }
+
+    &::-ms-clear {
+        display: none;
+    }
+
+    &::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
     &:focus {
         outline: none;
     }

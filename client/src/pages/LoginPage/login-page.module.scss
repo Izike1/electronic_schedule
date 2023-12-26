@@ -11,13 +11,12 @@
 .form {
     width: 300px;
     height: 150px;
-    padding: 26px;
+    padding: 30px;
     background-color: white;
     border-radius: 10px;
-    border: 2px solid $gray;
 }
 
-@media screen and (min-width:420px) {
+@media screen and (max-width:420px) {
     .form {
         width: 280px;
         height: 150px;

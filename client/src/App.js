@@ -4,23 +4,25 @@ import './configs/colors.scss'
 import AuthContext from './hooks/useAuth';
 import IsMobileContext from './hooks/useIsMobile';
 import getIsMobile from './utils/getIsMobile';
-
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
+import AppContainer from './components/AppContainer';
+import IconLoader from './components/IconLoader';
+import { BrowserRouter } from 'react-router-dom';
+import AuthContainer from './components/AuthContainer';
 function App() {
-  const isMobile = useMemo(getIsMobile, [getIsMobile])
   return (
     <div className="App">
-      <IsMobileContext.Provider value={isMobile}>
-        <AuthContext.Provider value={{
-          isAuth: true,
-          role: 'admin'
-        }}>
-          <MainRouter />
-        </AuthContext.Provider>
-
-      </IsMobileContext.Provider>
-
-    </div>
+      <BrowserRouter>
+        <Provider store={store}>
+          <AuthContainer>
+            <AppContainer />
+          </AuthContainer>
+        </Provider>
+      </BrowserRouter >
+    </div >
   );
 }
 

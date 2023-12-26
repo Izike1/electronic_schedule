@@ -19,6 +19,7 @@ const FormCreateGroup = ({ onSuccess, facultyId, onError, ...props }) => {
         })
     })}>
         <Wrapper children_margin direaction="col" align="center" justify="between" wrap={false} >
+            <h3 style={{ marginTop: 0 }}>Название группы должно быть как на сайте <a href="https://www.it-institut.ru/SearchString/Index/118">it-institut.ru</a></h3>
             <InputText size="medium"
                 isDirty={dirtyFields["group"]} isValid={!errors["group"]} isTouched={touchedFields["group"]}
                 placeholder="Название Группы" type="text" {...register('group', { required: true, validate: (val) => new Validate(val).validGroup() })} />

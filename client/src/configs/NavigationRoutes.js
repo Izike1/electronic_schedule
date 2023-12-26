@@ -3,11 +3,15 @@ export const NavigationRoutesConfig = {
         pathes: [
             {
                 name: 'Администрация',
-                link: '/admin'
+                link: '/admin/faculties'
             },
             {
                 name: 'Факультеты',
                 link: '/faculties'
+            },
+            {
+                name: 'Аккаунты',
+                link: '/admin/accounts'
             },
         ]
     }

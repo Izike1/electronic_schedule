@@ -19,10 +19,10 @@ const AttendancePage = () => {
     return <Page hasNav>
         <Container style={{ paddingBottom: '40px' }}>
             <Wrapper verticalMargin>
-                <DateSlider onChange={onChangeDate} defaultDate={Number(date)} />
+                <DateSlider required onChange={onChangeDate} defaultDate={Number(date)} />
             </Wrapper>
             <DelayShow rerenderDep={date}>
-                <AttendanceTable date={date} />
+                <AttendanceTable date={date} groupId={groupId} />
             </DelayShow>
         </Container>
 

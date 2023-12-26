@@ -1,0 +1,26 @@
+@import '../../configs/colors.scss';
+
+.card {
+    border-radius: 30px;
+    background-color: $ll_gray;
+    display: flex;
+    text-decoration: none;
+    color: $dd_gray;
+    padding: 15px 20px;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 300ms;
+
+    &:hover {
+        background-color: darken($ll_gray, 5);
+    }
+}
+
+.password {
+    background-color: $pale_blue;
+    font-size: 25px;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}

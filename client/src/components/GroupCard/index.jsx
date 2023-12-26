@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import classes from './group-card.module.scss'
-const GroupCard = ({ name, id, removeBtn = false, onRemove = () => { }, ...props }) => {
+const GroupCard = ({ name, id, removeBtn = false, facultyId, onRemove = () => { }, ...props }) => {
     return <div className={classes.card}>
-        <Link className={classes.link} to={`/groups/${id}`}>
+        <Link className={classes.link} state={{ facultyId }} to={`/groups/${id}`}>
             <h3 className={classes.name}>
                 {name}
             </h3>

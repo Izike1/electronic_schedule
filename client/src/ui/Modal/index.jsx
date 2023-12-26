@@ -5,6 +5,7 @@ import { ModalContext } from '../../hooks/useModal'
 const Modal = ({ isActive, setIsActive, isCloseble = true, children, ...props }) => {
     const ref = useRef(null)
     useEffect(() => {
+
         function handleClickOutSide(e) {
             if (ref.current && !ref.current.contains(e.target)) {
                 setIsActive(false)
@@ -18,7 +19,9 @@ const Modal = ({ isActive, setIsActive, isCloseble = true, children, ...props })
         }
     }, [ref, setIsActive])
     return <ModalContext.Provider value={{
-        hideModal: () => setIsActive(false)
+        hideModal: () => {
+            return setIsActive(false)
+        }
     }}>
         <DelayRemove visible={isActive} delay={100}>
 

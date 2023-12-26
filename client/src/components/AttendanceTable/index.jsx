@@ -1,14 +1,13 @@
 import { useCallback, useMemo, useState } from 'react'
-import { devFetchTable } from '../../api/Test/devFetchTable'
 import { useFetch } from '../../hooks/useFetch'
 import classes from './attendance-table.module.scss'
 import Loading from '../../ui/Loading'
-import { attendancesById } from '../../configs/Attendances'
 import SelectAttendance from '../SelectAttendance'
 import VerifyBlock from './VerifyBlock'
 import Wrapper from '../../ui/Wrapper'
+import { AttendanceService } from '../../api/AttendanceService'
 
-const AttendanceTable = ({ date, ...props }) => {
+const AttendanceTable = ({ groupId, date }) => {
 
     const [verified, setVerified] = useState([])
     const isTwomorrow = useMemo(() => {
@@ -20,119 +19,193 @@ const AttendanceTable = ({ date, ...props }) => {
         twomorrow.setMilliseconds(0)
         return twomorrow.getTime() <= Number(date)
     }, [date])
-    const fetchTable = useCallback(() => {
+    const fetchTable = useCallback(async () => {
         if (isTwomorrow) return Promise.reject('Date Error')
-        return devFetchTable(date)
-    }, [date, isTwomorrow])
+        return await AttendanceService.getAttendance(groupId, date)
+    }, [date, groupId, isTwomorrow])
     const [data, isLoading, error] = useFetch(fetchTable)
-    const colSpans = useMemo(() => {
-        if (!data) {
-            return null
+    const dataTable = useMemo(() => data?.data || null, [data])
+    const timelines = useMemo(() => {
+        if (!dataTable) {
+            return []
         }
+        const schedules = {}
+        const tlines = []
+        dataTable.schedules.forEach((l) => {
+            if (!(new Date(l.date).getTime() in schedules)) {
+                schedules[new Date(l.date).getTime()] = []
+            }
+            schedules[new Date(l.date).getTime()].push([l.lessonName, l.type, l.additional])
+        })
+        for (let time in schedules) {
+            tlines.push({
+                time: +time,
+                lessons: schedules[time]
+            })
+        }
+        return tlines
+    }, [dataTable])
+
+    const colSpans = useMemo(() => {
+
         const colSpans = {
             totalCount: 0,
             timelines: []
         }
-        colSpans.timelines = data.timelines.map((timeline) => {
+        if (!timelines?.length) {
+            return colSpans
+        }
+        colSpans.timelines = timelines.map((timeline) => {
             colSpans.totalCount += timeline?.lessons?.length
             return timeline?.lessons?.length
         })
         return colSpans
-    }, [data])
-    const lessons = useMemo(() => {
-        if (!data) {
-            return null
-        }
-        const lessons = []
-        data?.timelines?.forEach((timeline) => {
-            timeline?.lessons?.forEach((l) => {
-                lessons.push({ ...l, time: timeline.time })
-            })
-        })
-        setVerified(lessons.map(l => l.verifiedBy || null))
-        return lessons
-    }, [data])
-    const students = useMemo(() => {
-        if (!data) {
-            return null
-        }
-        return data.students
-    }, [data])
-    return <div className={classes.wrap + isLoading ? (' ' + classes.loading_wrap) : ''}>
-        {(error || isTwomorrow) ?
-            <Wrapper direaction='col' children_margin fullPageOptions={{ hasNav: true }} justify='center' align='center'>
-                <span>{'Ошибка :('}</span>
-                {isTwomorrow && <span>Вы не можете получить успеваемость на завтра!</span>}
-            </Wrapper> :
-            isLoading ? <Wrapper fullPageOptions={{ hasNav: true }} justify='center' align='center'><Loading size="large" /></Wrapper> :
-                data && <>
-                    {colSpans.totalCount <= 0 ? 'Выходной' :
-                        <table className={classes.main}>
-                            <thead>
-                                <tr>
-                                    <th rowSpan={3}>Студенты</th>
-                                    {/* <th colSpan={colSpans.totalCount}>{DayById[new Date(data.day).getDay()]} {new Date(data.day).toLocaleDateString()}</th> */}
-                                </tr>
-                                <tr>
-                                    {data.timelines.map((timeline, i) => {
-                                        return <th key={timeline.time} colSpan={colSpans.timelines[i]}>{timeline.time}</th>
-                                    })}
-                                </tr>
-                                <tr>
-                                    {
-                                        lessons.map((l) => {
-                                            return <th key={l.name.join(' ') + l.time}>
-                                                <div className={classes.lesson_name}>
-                                                    {l.name.map((info) => <span key={info}>
-                                                        {info}
-                                                    </span>
-                                                    )}
-                                                </div>
-                                            </th>
-                                        })
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {students.map((s, studentIndex) => {
-                                    const fullName = `${s.lastName} ${s.firstName.slice(0, 1)}.${s.middleName ? ` ${s.middleName.slice(0, 1)}.` : ''}`
-                                    return <tr key={fullName}>
-                                        <td className={classes.left_col}>{fullName}</td>
-                                        {s.states.map((state, stateIndex) => {
-                                            return <td key={fullName + lessons[stateIndex].name.join(' ') + lessons[stateIndex].time}>
+    }, [timelines])
 
-                                                <SelectAttendance hintPos={(students.length / 2 > studentIndex) ? 'bottom' : 'top'}
-                                                    fixed={verified[stateIndex] !== null}
-                                                    value={attendancesById[state]} />
-                                            </td>
-                                        })}
-                                    </tr>
-                                })}
-                                <tr>
-                                    <td className={classes.left_col} >Подпись</td>
-                                    {lessons.map((l, i) => {
-                                        return <td key={l.name.join(' ') + l.time}>
-                                            <VerifyBlock onChange={(e) => {
-                                                if (e.type === 'unset') {
-                                                    setVerified((prev) => {
-                                                        const clone = [...prev]
-                                                        clone[i] = null
-                                                        return clone
-                                                    })
-                                                } else {
-                                                    setVerified((prev) => {
-                                                        const clone = [...prev]
-                                                        clone[i] = e.name
-                                                        return clone
-                                                    })
-                                                }
-                                            }} verifiedBy={verified[i]}></VerifyBlock>
-                                        </td>
-                                    })}
-                                </tr>
-                            </tbody>
-                        </table>}
-                </>}
-    </div>
+    const lessons = useMemo(() => {
+        if (!dataTable) {
+            return null
+        }
+        const lessons = dataTable?.schedules
+        setVerified(lessons.map(l => (l.userInfo === 'unknown' || !l.userInfo) ? null : l.userInfo))
+        lessons.forEach((l) => {
+            l.info = [l.lessonName, l.type, l.additional]
+        })
+        return lessons
+    }, [dataTable])
+
+    const students = useMemo(() => {
+        if (!dataTable) {
+            return null
+        }
+        return dataTable.students.sort((a, b) => {
+            const info1 = a.User_info
+            const info2 = b.User_info
+            let last = info1.last_name.localeCompare(info2.last_name)
+            if (last !== 0) {
+                return last
+            }
+            let first = info1.first_name.localeCompare(info2.first_name)
+            return first
+        })
+    }, [dataTable])
+    const attendances = useMemo(() => {
+        const res = {}
+        if (!dataTable?.attendances) {
+            return res
+        }
+        for (let attendances of dataTable.attendances) {
+            if (!attendances) {
+                continue
+            }
+            for (let attendance of attendances) {
+                if (!attendance) {
+                    continue
+                }
+                const userId = attendance.UserId
+                const scheduleId = attendance.ScheduleId
+                if (!(userId in res)) {
+                    res[userId] = {}
+                }
+                if (!(scheduleId in res[userId])) {
+                    res[userId][scheduleId] = attendance.status
+                }
+            }
+
+        }
+        return res
+    }, [dataTable])
+
+    if (error || isTwomorrow) {
+        return <Wrapper direaction='col' children_margin fullPageOptions={{ hasNav: true }} justify='center' align='center'>
+            <span>{'Ошибка :('}</span>
+            {isTwomorrow && <span>Вы не можете получить успеваемость на следующие дни!</span>}
+        </Wrapper>
+    }
+    if (isLoading) {
+        return <Wrapper fullPageOptions={{ hasNav: true }} justify='center' align='center'><Loading size="large" /></Wrapper>
+    }
+    if (data && timelines && (colSpans === null || colSpans.totalCount <= 0)) {
+        return <Wrapper fullPageOptions={{ hasNav: true }} justify='center' align='center'>{'Выходной : )'}</Wrapper>
+    }
+    return <div className={classes.wrap}>
+        {timelines && lessons && students && attendances && <table className={classes.main}>
+            <thead>
+                <tr>
+                    <th rowSpan={3}>Студенты</th>
+                    {/* <th colSpan={colSpans.totalCount}>{DayById[new Date(data.day).getDay()]} {new Date(data.day).toLocaleDateString()}</th> */}
+                </tr>
+                <tr>
+                    {timelines.map((timeline, i) => {
+
+                        return <th key={timeline.time} colSpan={colSpans.timelines[i]}>{new Date(timeline.time).getHours() + ':' + new Date(timeline.time).getMinutes()}</th>
+                    })}
+                </tr>
+                <tr>
+                    {
+                        lessons.map((l) => {
+                            return <th key={l.info.join(' ') + l.date}>
+                                <div className={classes.lesson_name}>
+                                    {l.info.map((info) => <span key={info}>
+                                        {info}
+                                    </span>
+                                    )}
+                                </div>
+                            </th>
+                        })
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {students.map((s, studentIndex) => {
+                    const sInfo = s.User_info
+                    const fullName = `${sInfo.last_name} ${sInfo.first_name.slice(0, 1)}.${sInfo.middle_name ? ` ${sInfo.middle_name.slice(0, 1)}.` : ''}`
+                    return <tr key={s.id}>
+                        <td className={classes.left_col}>{fullName}</td>
+                        {lessons.map((l, lessonIndex) => {
+                            let status = 'unknown'
+
+                            if (attendances[s.id] && attendances[s.id][l.id]) {
+                                status = attendances[s.id][l.id]
+
+                            }
+                            return <td key={s.id + l.info.join(' ') + Number(l.date)}>
+
+                                <SelectAttendance schedule={l.id} student={s.id} hintPos={(students.length / 2 > studentIndex) ? 'bottom' : 'top'}
+                                    fixed={verified[lessonIndex] !== null}
+                                    value={
+                                        status
+                                    } />
+                            </td>
+                        })}
+                    </tr>
+                })}
+                <tr>
+                    <td className={classes.left_col} >Подпись</td>
+                    {lessons.map((l, i) => {
+                        return <td key={l.info.join(' ') + l.date}>
+                            <VerifyBlock schedule={l.id} onChange={(e) => {
+                                if (e.type === 'unset') {
+                                    setVerified((prev) => {
+                                        const clone = [...prev]
+                                        clone[i] = null
+                                        return clone
+                                    })
+                                } else {
+                                    setVerified((prev) => {
+                                        const clone = [...prev]
+                                        console.log(l)
+                                        clone[i] = e.userInfo
+                                        return clone
+                                    })
+                                }
+                            }} verifiedBy={verified[i]}></VerifyBlock>
+                        </td>
+                    })}
+                </tr>
+            </tbody>
+        </table>
+        }
+    </div >
 }
 export default AttendanceTable
