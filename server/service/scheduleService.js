@@ -1,17 +1,17 @@
 const sequelize = require('../db');
-const {Schedule, Groups, Lesson, Lesson_has_Schedule,User, User_info} = require('../models/models')
-const {AgpuAPI} = require("../remote-api/schedule/agpuAPI");
-const {getDateRange, stringToDate, currentDateRound, stringToTime} = require('../utils/dateUtil');
-const {ApiError} = require('../error/ApiError');
-const {writeToLogFile} = require('../logger/index');
-const {Op} = require("sequelize");
-const {createSyncProcess} = require("../utils/createSyncProcess");
+const { Schedule, Groups, Lesson, Lesson_has_Schedule, User, User_info } = require('../models/models')
+const { AgpuAPI } = require("../remote-api/schedule/agpuAPI");
+const { getDateRange, stringToDate, currentDateRound, stringToTime } = require('../utils/dateUtil');
+const { ApiError } = require('../error/ApiError');
+const { writeToLogFile } = require('../logger/index');
+const { Op } = require("sequelize");
+const { createSyncProcess } = require("../utils/createSyncProcess");
 
 const processHelper = createSyncProcess()
 
 class ScheduleService {
     async getSchedule(name, currentDate) {
-        const curProcessName = name + ' ' + getDateRange(currentDate).map((d) => new Date(d).getTime()).join(' ')
+        const curProcessName = name + ' ' + getDateRange(Number(currentDate)).map((d) => new Date(d).getTime()).join(' ')
         if (processHelper.isInProcess(curProcessName)) {
             await processHelper.waitProcess(curProcessName)
         }
@@ -22,7 +22,7 @@ class ScheduleService {
             writeToLogFile('Ошибка даты')
             throw ApiError.badRequest('Ошибка даты')
         }
-        const group = await Groups.findOne({where: {name: name}})
+        const group = await Groups.findOne({ where: { name: name } })
         if (!group) {
             console.log('Ошибка получения группы')
             writeToLogFile('Ошибка получения группы')
@@ -70,14 +70,14 @@ class ScheduleService {
 
                 for (let i = 0; i < scheduleData.length; i++) {
                     const schedule = scheduleData[i]
-                    const {lesson: lessonName, ...restedSchedule} = schedule
+                    const { lesson: lessonName, ...restedSchedule } = schedule
                     await Lesson.findOrCreate({
                         where: {
                             name: lessonName
                         },
                         transaction: t
                     })
-                    const createdSchedule = await Schedule.create(restedSchedule, {transaction: t})
+                    const createdSchedule = await Schedule.create(restedSchedule, { transaction: t })
                     lessonScheduleEntries.push({
                         LessonName: lessonName,
                         ScheduleId: createdSchedule.id,
@@ -85,7 +85,7 @@ class ScheduleService {
                     result.push(createdSchedule.id)
                 }
 
-                await Lesson_has_Schedule.bulkCreate(lessonScheduleEntries, {transaction: t});
+                await Lesson_has_Schedule.bulkCreate(lessonScheduleEntries, { transaction: t });
             });
             process.endProcess()
             return result
@@ -105,7 +105,7 @@ class ScheduleService {
             writeToLogFile('Расписание или пользователь не найдены');
             throw ApiError.badRequest('Расписание или пользователь не найдены');
         }
-        const userInfo = await User_info.findOne({where: {id: user.UserInfoId}})
+        const userInfo = await User_info.findOne({ where: { id: user.UserInfoId } })
         await schedule.update({
             UserId: user.id
         });
@@ -115,8 +115,8 @@ class ScheduleService {
         };
     }
 
-    async unsetSchedule(scheduleId){
-        const schedule = await Schedule.findOne({where: {id: scheduleId}})
+    async unsetSchedule(scheduleId) {
+        const schedule = await Schedule.findOne({ where: { id: scheduleId } })
         if (!schedule) {
             console.log('Расписание не найдено');
             writeToLogFile('Расписание не найдено');

@@ -34,7 +34,7 @@ CREATE TABLE `Attendances` (
   `updatedAt` datetime NOT NULL,
   `UserId` int DEFAULT NULL,
   `ScheduleId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Attendances`
@@ -140,7 +140,7 @@ CREATE TABLE `Auths` (
   `role` varchar(255) DEFAULT 'HEADMAN',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Auths`
@@ -439,7 +439,7 @@ CREATE TABLE `Faculties` (
   `name` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Faculties`
@@ -465,7 +465,7 @@ CREATE TABLE `Groups` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `FacultyId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Groups`
@@ -762,7 +762,7 @@ CREATE TABLE `Lessons` (
   `name` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Lessons`
@@ -799,7 +799,7 @@ CREATE TABLE `Lesson_has_Schedules` (
   `updatedAt` datetime NOT NULL,
   `LessonName` varchar(255) NOT NULL,
   `ScheduleId` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Lesson_has_Schedules`
@@ -857,7 +857,7 @@ CREATE TABLE `Schedules` (
   `updatedAt` datetime NOT NULL,
   `UserId` int DEFAULT NULL,
   `GroupId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Schedules`
@@ -912,7 +912,7 @@ CREATE TABLE `Tokens` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `AuthId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Tokens`
@@ -1243,7 +1243,7 @@ CREATE TABLE `Users` (
   `AuthId` int DEFAULT NULL,
   `UserInfoId` int DEFAULT NULL,
   `GroupId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `Users`
@@ -7290,7 +7290,7 @@ CREATE TABLE `User_infos` (
   `middle_name` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `User_infos`
