@@ -11,6 +11,11 @@ const processHelper = createSyncProcess()
 
 class ScheduleService {
     async getSchedule(name, currentDate) {
+        const curProcessName = name + ' ' + getDateRange(currentDate).map((d) => new Date(d).getTime()).join(' ')
+        if (processHelper.isInProcess(curProcessName)) {
+            await processHelper.waitProcess(curProcessName)
+        }
+        const process = processHelper.createProcess(curProcessName)
         currentDate = Number(currentDate)
         if (currentDate > new Date(Date.now()).setHours(23)) {
             console.log('Ошибка даты')
@@ -23,11 +28,6 @@ class ScheduleService {
             writeToLogFile('Ошибка получения группы')
             throw ApiError.badRequest('Ошибка получения группы')
         }
-        const curProcessName = group.id + ' ' + getDateRange(currentDate).map((d) => new Date(d).getTime()).join(' ')
-        if (processHelper.isInProcess(curProcessName)) {
-            await processHelper.waitProcess(curProcessName)
-        }
-
 
         const scheduleFromDB = await Schedule.findAll({
             where: {
@@ -40,7 +40,6 @@ class ScheduleService {
         if (scheduleFromDB.length > 0) {
             return scheduleFromDB.map(schedule => schedule.dataValues.id);
         }
-        const process = processHelper.createProcess(curProcessName)
         try {
             const scheduleData = []
             let result = [];
