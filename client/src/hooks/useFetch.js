@@ -23,6 +23,6 @@ export const useFetch = (cb) => {
             ignore = true
         }
     }, [cb])
-    return [data, isLoading, error]
+    return [data, isLoading, error, setData]
 
 }

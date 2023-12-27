@@ -1,8 +1,16 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import classes from './nav-bar.module.scss'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { AuthActionCreators } from '../../redux/auth/action-creator'
 const NavBar = ({ links, ...props }) => {
     const [isActive, setIsActive] = useState(false)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const logout = useCallback(async () => {
+        await dispatch(AuthActionCreators.logout())
+        navigate('/login')
+    }, [dispatch, navigate])
     return <nav className={classes.nav} {...props}>
         <div className={classes.container}>
             <button onClick={() => {
@@ -27,9 +35,11 @@ const NavBar = ({ links, ...props }) => {
                     </li>
                 })}
             </ul>
-            <button className={classes.logout}><span className="material-symbols-outlined">
-                logout
-            </span></button>
+            <button onClick={() => {
+                logout()
+            }} className={classes.logout}><span className="material-symbols-outlined">
+                    logout
+                </span></button>
         </div>
 
     </nav>

@@ -8,15 +8,16 @@ import List from '../../ui/List'
 import classes from './select.module.scss'
 import Variant from './Variant'
 import Loading from '../../ui/Loading'
-import { updateAttendance } from '../../api/Test/devSelectAttendance'
+
+import { AttendanceService } from '../../api/AttendanceService'
 
 const SelectAttendance = ({ onChange, student = 1, schedule = 4, fixed = false, hintPos = 'bottom', value = null, ...props }) => {
+
     const [isHintActive, setHintActive] = useState(false)
     const ref = useRef(null)
     const [selected, setSelected] = useState(value)
     const isMobile = useIsMobile()
     const [isLoading, setIsLoading] = useState(false)
-    const ignoreLoading = useRef(false)
     const showHint = useCallback((e) => {
         if (fixed) {
             e.preventDefault()
@@ -37,8 +38,7 @@ const SelectAttendance = ({ onChange, student = 1, schedule = 4, fixed = false, 
             return
         }
         setIsLoading(true)
-
-        updateAttendance(student, schedule, type).then(() => {
+        AttendanceService.updateAttendance(student, schedule, type).then(() => {
             setSelected(type)
         })
             .catch((e) => {

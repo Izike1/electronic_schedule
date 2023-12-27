@@ -1,3 +1,6 @@
+import AdminAccountsPage from '../pages/AdminPages/AdminAccountsPage'
+import AdminFacultiesPage from '../pages/AdminPages/AdminFacultiesPage'
+import AdminGroupsPage from '../pages/AdminPages/AdminGroupsPage'
 import AttendancePage from '../pages/AttendancePage'
 import AttendanceRedirector from '../pages/AttendancePage/AttedanceRedirector'
 import FacultiesPage from '../pages/FacultiesPage'
@@ -31,9 +34,21 @@ export const RoutesConfig = {
                 {
                     path: '/groups/:id/:date',
                     component: <AttendancePage />
+                },
+                {
+                    path: '/admin/faculties',
+                    component: <AdminFacultiesPage />
+                },
+                {
+                    path: '/admin/faculties/:id',
+                    component: <AdminGroupsPage />
+                },
+                {
+                    path: '/admin/accounts',
+                    component: <AdminAccountsPage />
                 }
             ],
-            redirect: '/faculties'
+            redirect: '/admin/faculties'
         }
     }
 }

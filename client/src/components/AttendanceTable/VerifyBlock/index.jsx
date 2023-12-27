@@ -4,13 +4,15 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useClassMap } from '../../../hooks/useClassMap';
 import Loading from '../../../ui/Loading';
 import { updateVerify } from '../../../api/Test/devVerify';
-const VerifyBlock = ({ onChange = (e) => { console.log(e) }, verifiedBy = null, ...props }) => {
-    const auth = useAuth()
+import { useSelector } from 'react-redux';
+import { AttendanceService } from '../../../api/AttendanceService';
+const VerifyBlock = ({ schedule, onChange = (e) => { console.log(e) }, verifiedBy = null, ...props }) => {
+    const auth = useSelector(({ authReducer }) => authReducer)
     const [isLoading, setIsLoading] = useState(false)
     const handleClick = useCallback(() => {
         setIsLoading(true)
         if (verifiedBy !== null) {
-            updateVerify().then(() => {
+            AttendanceService.unverifyByScheduleId(schedule).then(() => {
                 onChange({
                     type: 'unset'
                 })
@@ -20,10 +22,10 @@ const VerifyBlock = ({ onChange = (e) => { console.log(e) }, verifiedBy = null, 
             })
 
         } else {
-            updateVerify().then(() => {
+            AttendanceService.verifyByScheduleId(schedule).then((res) => {
                 onChange({
                     type: 'set',
-                    name: 'My Name'
+                    userInfo: res.data.userInfo || null
                 })
                 setIsLoading(false)
             }).catch(() => {
@@ -32,10 +34,10 @@ const VerifyBlock = ({ onChange = (e) => { console.log(e) }, verifiedBy = null, 
 
         }
 
-    }, [onChange, verifiedBy, setIsLoading])
+    }, [verifiedBy, schedule, onChange])
     const classNames = useClassMap({
         [classes.verify_button]: true,
-        [classes.fixed]: (auth.role === 'group' || auth.role === 'headman'),
+        [classes.fixed]: (auth.user.role === 'group' || auth.user.role === 'headman'),
         [classes.loading]: isLoading
     })
 
@@ -47,7 +49,7 @@ const VerifyBlock = ({ onChange = (e) => { console.log(e) }, verifiedBy = null, 
         }} className={classNames()}>
             {isLoading ?
                 <Loading size="small" />
-                : verifiedBy !== null && verifiedBy}
+                : verifiedBy !== null && `${verifiedBy.last_name} ${verifiedBy.first_name[0]}.${verifiedBy.middle_name ? ` ${verifiedBy.middle_name[0]}.` : ''} `}
         </button>
     </div>
 }

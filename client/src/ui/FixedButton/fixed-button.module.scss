@@ -6,6 +6,12 @@
     bottom: 5%;
     right: 5%;
     z-index: 20;
+    transform: scale(0);
+    transition: transform 200ms;
+
+    &.active {
+        transform: scale(1);
+    }
 }
 
 .tooltip {

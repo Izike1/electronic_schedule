@@ -1,36 +1,44 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Page from '../../components/Page'
-import Modal from '../../ui/Modal'
-import FormCreateGroup from '../../forms/FormCreateGroup'
-import { useParams } from 'react-router-dom'
 import Wrapper from '../../ui/Wrapper'
 import GroupCard from '../../components/GroupCard'
 import Container from '../../ui/Container'
 import SearchInput from '../../ui/SearchInput'
-import FixedButton from '../../ui/FixedButton'
-import ModalForm from '../../forms/ModalForm'
-import Button from '../../ui/Button'
-const GroupsPage = (props) => {
-    const [activeDeletePrompt, setActiveDeletePrompt] = useState(false)
-    const [activeCreateModal, setActiveCreateModal] = useState(false)
-    const [deleteFocus, setDeleteFocus] = useState(null)
-    const [searchVal, setSearchVal] = useState('')
-    const { id: facultyId } = useParams()
+import { FacultyService } from '../../api/FacultyService'
+import { useParams } from 'react-router-dom'
+import { useFetch } from '../../hooks/useFetch'
+import Loading from '../../ui/Loading'
 
-    const [groups, setGroups] = useState([{
-        id: 1,
-        name: 'Name'
-    },
-    {
-        id: 2,
-        name: 'ВМ-ИВТ-2-1'
-    },])
-    const createGroup = (id, name) => {
-        setGroups((p) => [...p, { id, name }])
-    }
+const GroupsPage = (props) => {
+    const { id: facultyId } = useParams()
+    const [searchVal, setSearchVal] = useState('')
+
+    const fetchGroups = useCallback(async () => {
+        return await FacultyService.getGroupsByFactulty(facultyId)
+    }, [facultyId])
+
+    const [groupsRes, isLoading, error] = useFetch(fetchGroups)
+    const groups = useMemo(() => groupsRes?.data || [], [groupsRes])
+
     const filtredGroups = useMemo(() => groups.filter((g) => {
         return g.name.toLowerCase().indexOf(searchVal.toLowerCase()) >= 0
     }), [groups, searchVal])
+    if (isLoading) {
+        return <Wrapper align='center' fullPageOptions={{ hasNav: true }}>
+            <Loading size="large"></Loading>
+        </Wrapper>
+    }
+    if (isLoading) {
+        return <Wrapper align='center' fullPageOptions={{ hasNav: true }}>
+            <Loading size="large"></Loading>
+        </Wrapper>
+    }
+
+    if (error) {
+        return <Wrapper align='center' direaction='col' justify='center' children_margin fullPageOptions={{ hasNav: true }}>
+            <span>{'Ошибка : ('}</span>
+        </Wrapper>
+    }
     return <Page hasNav>
         <Container>
             <Wrapper verticalMargin> <SearchInput value={searchVal} onChange={(e) => setSearchVal(e.target.value)} /></Wrapper>
@@ -39,11 +47,7 @@ const GroupsPage = (props) => {
 
                 <Wrapper verticalMargin direaction='col'>
                     {filtredGroups.map((g) => {
-                        return <GroupCard removeBtn onRemove={() => {
-                            console.log('click')
-                            setDeleteFocus(g)
-                            setActiveDeletePrompt(true)
-                        }} key={g.id} name={g.name} id={g.id} />
+                        return <GroupCard facultyId={facultyId} key={g.id} name={g.name} id={g.id} />
                     })}
                 </Wrapper>
             </>
@@ -54,42 +58,7 @@ const GroupsPage = (props) => {
                 </Wrapper>
             }
         </Container>
-        <FixedButton onClick={() => {
-            setActiveCreateModal(true)
-        }} tooltip='Здесь можно создавать новые группы' />
-        <Modal isActive={activeDeletePrompt && deleteFocus} setIsActive={setActiveDeletePrompt}>
-            <ModalForm>
-                <Wrapper direaction="col" justify="between" wrap={false} >
-                    <span>Вы уверенны что хотите удалить группу: {deleteFocus?.name || 'Неизвестно'}?</span>
-                    <Wrapper justify='around' verticalMargin>
-                        <Button size="medium" styleType="warning" onClick={(e) => {
-                            e.preventDefault()
-                            setActiveDeletePrompt(false)
-                            setDeleteFocus(null)
-                            setGroups((p) => {
-                                return p.filter((g) => g.id !== deleteFocus?.id)
-                            })
-                        }}>Удалить</Button>
-                        <Button onClick={(e) => {
-                            e.preventDefault()
-                            setActiveDeletePrompt(false)
-                            setDeleteFocus(null)
-                        }} size="medium" >Отмена</Button>
-                    </Wrapper>
-                </Wrapper>
-            </ModalForm>
-        </Modal>
 
-        <Modal setIsActive={setActiveCreateModal} isActive={activeCreateModal} >
-
-            <FormCreateGroup facultyId={facultyId} onSuccess={(data) => {
-                setActiveCreateModal(false)
-                createGroup({
-                    name: data.name,
-                    id: data.id
-                })
-            }} />
-        </Modal>
     </Page>
 }
 export default GroupsPage
