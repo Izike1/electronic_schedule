@@ -29,8 +29,9 @@ class AuthService {
 
     async login(login, password) {
         const candidate = await Auth.findOne({ where: { login: login } })
+        console.log(candidate)
         if (!candidate || password !== candidate.password) {
-            writeToLogFile(`Ошибка при входе ${candidate.login}`)
+            writeToLogFile(`Ошибка при входе ${login}`)
             throw ApiError.badRequest('Ошибка при входе')
         }
         const authDto = new AuthDto(candidate);

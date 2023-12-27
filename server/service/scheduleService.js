@@ -38,6 +38,7 @@ class ScheduleService {
             }
         })
         if (scheduleFromDB.length > 0) {
+            process.endProcess()
             return scheduleFromDB.map(schedule => schedule.dataValues.id);
         }
         try {
