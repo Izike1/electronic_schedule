@@ -38,6 +38,15 @@ class UserService {
         }
     }
 
+    async findUserByAuthId(authId) {
+        const user = await User.findOne({where: {AuthId: authId}})
+        writeToLogFile(`Получение пользователя ${authId}`)
+        if (!user) {
+            throw ApiError.badRequest('Пользователь не найден');
+        }
+        return user
+    }
+
     async getUser(id) {
         const user = await User.findOne({where: {id: id}});
         writeToLogFile(`Получение пользователя ${id}`)

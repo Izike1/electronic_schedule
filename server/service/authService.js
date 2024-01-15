@@ -16,6 +16,7 @@ class AuthService {
             throw ApiError.badRequest('Пользователь с таким именем уже существует')
         }
         const auth = await Auth.create({ login, role, password })
+        writeToLogFile(`Регистрация ${login}`)
         const authDto = new AuthDto(auth);
         const tokens = tokenService.generateToken({ ...authDto });
         const user = await userService.createUser(firstName, lastName, middleName, groupId, auth.id)
@@ -29,7 +30,6 @@ class AuthService {
 
     async login(login, password) {
         const candidate = await Auth.findOne({ where: { login: login } })
-        console.log(candidate)
         if (!candidate || password !== candidate.password) {
             writeToLogFile(`Ошибка при входе ${login}`)
             throw ApiError.badRequest('Ошибка при входе')

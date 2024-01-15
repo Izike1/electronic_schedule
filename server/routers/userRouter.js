@@ -6,9 +6,9 @@ const roleMiddlewareCreator = require('../middleware/roleMiddlewareCreator')
 
 router.post('/createUser', authMiddleware(), roleMiddlewareCreator(['admin']), userController.createUser)
 
-router.get('/getUser', authMiddleware(), userController.getUser)
-router.get('/getUsersByGroupName', authMiddleware(), userController.getUsersByGroupName)
-router.get('/getUsersByFacultyName', authMiddleware(), userController.getUsersByFacultyName)
+router.get('/getUser', authMiddleware(), roleMiddlewareCreator(['admin']), userController.getUser)
+router.get('/getUsersByGroupName', authMiddleware(), roleMiddlewareCreator(['admin']), userController.getUsersByGroupName)
+router.get('/getUsersByFacultyName', authMiddleware(), roleMiddlewareCreator(['admin']), userController.getUsersByFacultyName)
 
 router.delete('/removeUser', authMiddleware(), roleMiddlewareCreator(['admin']), userController.removeUser)
 

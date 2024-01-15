@@ -1,5 +1,4 @@
 const authService = require('../service/authService');
-const {writeToLogFile} = require("../logger");
 
 class AuthController {
     async registration(req, res, next) {
@@ -7,7 +6,6 @@ class AuthController {
             const {login, password, role, firstName, lastName, middleName, groupId} = req.body;
             const authData = await authService.registration(login, password, role, firstName, lastName, middleName, groupId)
             this.sendRefreshTokenCookie(res, authData.refreshToken)
-            writeToLogFile(`Регистрация ${login}`)
             return res.json(authData)
         } catch (e) {
             next(e);
@@ -28,7 +26,6 @@ class AuthController {
     async logout(req, res, next) {
         try {
             const {refreshToken} = req.cookies;
-
             const token = await authService.logout(refreshToken);
             res.clearCookie('refreshToken');
             return res.json(token);
