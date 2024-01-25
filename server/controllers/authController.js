@@ -5,7 +5,6 @@ class AuthController {
         try {
             const { login, password, role, firstName, lastName, middleName, groupId } = req.body;
             const authData = await authService.registration(login, password, role, firstName, lastName, middleName, groupId)
-            writeToLogFile(`Регистрация ${login}`)
             return res.json(authData)
         } catch (e) {
             next(e);
