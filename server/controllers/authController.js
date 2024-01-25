@@ -1,5 +1,4 @@
 const authService = require('../service/authService');
-const { writeToLogFile } = require("../logger");
 
 class AuthController {
     async registration(req, res, next) {
@@ -27,7 +26,6 @@ class AuthController {
     async logout(req, res, next) {
         try {
             const { refreshToken } = req.cookies;
-
             const token = await authService.logout(refreshToken);
             res.clearCookie('refreshToken');
             return res.json(token);

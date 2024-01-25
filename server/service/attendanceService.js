@@ -8,7 +8,6 @@ const processHelper = createSyncProcess()
 
 class AttendanceService {
     async createAttendance(status, userId, scheduleId) {
-        console.log(scheduleId)
         if (processHelper.isInProcess(userId + ' ' + scheduleId)) {
             await processHelper.waitProcess(userId + ' ' + scheduleId)
         }

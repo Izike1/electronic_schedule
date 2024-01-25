@@ -13,5 +13,6 @@ router.delete('/delete', authMiddleware(), roleMiddlewareCreator(['admin']), aut
 router.get('/refresh', authController.refresh.bind(authController))
 router.get('/getAuth', authMiddleware(), roleMiddlewareCreator(['admin']), authController.getAuths)
 router.get('/getAuthByChunk', authMiddleware(), roleMiddlewareCreator(['admin']), authController.getAuthsByChunks)
+router.get('/getAuthsByRoles', authMiddleware(), roleMiddlewareCreator(['admin']), authController.getAuthsByRoles)
 
 module.exports = router
