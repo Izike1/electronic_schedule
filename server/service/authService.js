@@ -16,13 +16,9 @@ class AuthService {
             throw ApiError.badRequest('Пользователь с таким именем уже существует')
         }
         const auth = await Auth.create({ login, role, password })
-        const authDto = new AuthDto(auth);
-        const tokens = tokenService.generateToken({ ...authDto });
+
         const user = await userService.createUser(firstName, lastName, middleName, groupId, auth.id)
-        await tokenService.saveToken(authDto.id, tokens.refreshToken);
         return {
-            ...tokens,
-            auth: authDto,
             user
         }
     }
