@@ -64,6 +64,7 @@ class UserService {
                 'name'
             ],
             include: [{
+                where: {AuthId: null},
                 attributes: [
                     'id'
                 ],

@@ -56,7 +56,6 @@ class AttendanceService {
         const groupName = await Groups.findOne({where: {id: groupId}});
         if (!groupName) {
             writeToLogFile(`Группа не найдена`)
-            console.log('Группа не найдена');
             return schedules;
         }
         const user = await userService.getUsersByGroupName(groupId);
