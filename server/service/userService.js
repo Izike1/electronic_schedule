@@ -1,7 +1,7 @@
-const {User, Groups, User_info, Faculty} = require('../models/models');
+const { User, Groups, User_info, Faculty } = require('../models/models');
 const ApiError = require('../error/ApiError');
-const {writeToLogFile} = require('../logger/index')
-
+const { writeToLogFile } = require('../logger/index')
+const sequelize = require('../db')
 class UserService {
     async createUser(firstName, lastName, middleName, groupId, authId) {
         const candidate = await User_info.findOne({
@@ -21,7 +21,7 @@ class UserService {
             middle_name: middleName,
         })
         let user;
-        const userData = {UserInfoId: userInfo.id};
+        const userData = { UserInfoId: userInfo.id };
 
         if (groupId !== null) {
             userData.GroupId = groupId;
@@ -39,7 +39,7 @@ class UserService {
     }
 
     async findUserByAuthId(authId) {
-        const user = await User.findOne({where: {AuthId: authId}})
+        const user = await User.findOne({ where: { AuthId: authId } })
         writeToLogFile(`Получение пользователя ${authId}`)
         if (!user) {
             throw ApiError.badRequest('Пользователь не найден');
@@ -48,7 +48,7 @@ class UserService {
     }
 
     async getUser(id) {
-        const user = await User.findOne({where: {id: id}});
+        const user = await User.findOne({ where: { id: id } });
         writeToLogFile(`Получение пользователя ${id}`)
         if (!user) {
             throw ApiError.badRequest('Пользователь не найден');
@@ -58,13 +58,13 @@ class UserService {
 
     async getUsersByGroupName(id) {
         const group = await Groups.findOne({
-            where: {id: id},
+            where: { id: id },
             attributes: [
                 'id',
                 'name'
             ],
             include: [{
-                where: {AuthId: null},
+                where: { AuthId: null },
                 attributes: [
                     'id'
                 ],
@@ -88,7 +88,7 @@ class UserService {
 
     async getUsersByFacultyName(id) {
         const faculty = await Faculty.findAll({
-            where: {id: id},
+            where: { id: id },
             include: [{
                 model: User,
                 required: true,
@@ -109,12 +109,20 @@ class UserService {
     }
 
     async removeUser(id) {
-        const user = await User.findOne({where: {id: id}});
+        const user = await User.findOne({ where: { id: id } });
         if (!user) {
             throw ApiError.badRequest('Пользователь не найден');
         }
         writeToLogFile(`Удаление пользователя ${id}`)
-        return await User.destroy({where: {id: id}})
+
+
+        return await sequelize.transaction(async (t) => {
+            await User_info.destroy({
+                where: { UserInfoId: user.dataValues.UserInfoId },
+                transaction: t
+            });
+            await User.destroy({ where: { id: id }, transaction: t })
+        })
     }
 }
 

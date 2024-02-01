@@ -1,11 +1,10 @@
-const { Auth, User_info } = require('../models/models')
+const { Auth, User_info, User } = require('../models/models')
 const tokenService = require('./tokenService')
 const userService = require('./userService')
 const AuthDto = require('../dtos/authDto')
 const ApiError = require('../error/ApiError')
 const { Op } = require('sequelize')
 const { writeToLogFile } = require('../logger/index')
-const { User } = require('../db')
 const sequelize = require('../db')
 
 class AuthService {
@@ -68,9 +67,13 @@ class AuthService {
 
     async delete(authId) {
         writeToLogFile(`Удаление пользователя ${authId}`)
+        const user = await User.findOne({ where: { authId: authId } })
+        console.log(user)
+        if (!user) throw ApiError.badRequest("Пользователь не найден")
         return await sequelize.transaction(async (t) => {
+
             await User.destroy({
-                where: { AuthId: authId },
+                where: { id: user.dataValues.id },
                 transaction: t
             });
 
@@ -80,7 +83,7 @@ class AuthService {
             });
 
             await User_info.destroy({
-                where: { UserInfoId: authId },
+                where: { id: user.dataValues.UserInfoId },
                 transaction: t
             });
         });

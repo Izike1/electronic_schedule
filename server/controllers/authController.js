@@ -46,8 +46,8 @@ class AuthController {
 
     async delete(req, res, next) {
         try {
-            const { authId } = req.body;
-            const authData = await authService.delete(authId)
+            const { id } = req.body;
+            const authData = await authService.delete(id)
             res.json(authData)
         } catch (e) {
             next(e)
