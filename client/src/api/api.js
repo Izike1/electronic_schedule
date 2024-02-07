@@ -1,8 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const API_URL = `https://localhost:7000/api`
-export const WEB_URL = `https://${window.location.host}`
+export const API_URL = `http://uspev.agpu.net/api`
+export const WEB_URL = `http://uspev.agpu.net/api`
 
 const $api = axios.create({
     withCredentials: true,

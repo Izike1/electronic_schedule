@@ -86,9 +86,7 @@ class AuthController {
     sendRefreshTokenCookie(res, refreshToken) {
         res.cookie('refreshToken', refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
-            sameSite: 'none',
-            secure: true
+            httpOnly: true
         });
     }
 }
