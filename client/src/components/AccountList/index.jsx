@@ -5,15 +5,26 @@ import Loading from "../../ui/Loading"
 import { requestRepeater } from "../../utils/requestRepeater"
 import AccountItem from "./AccountItem"
 import Modal from "../../ui/Modal"
+import Button from "../../ui/Button"
+import { toast } from "react-toastify"
 
-const AccountList = ({ addAccount = () => { }, searchVal, ...props }) => {
+const AccountList = ({ searchVal, ...props }) => {
     const getAccounts = useCallback(async (search, page) => {
         return await AccountService.searchAccounts(search, page, 10)
     }, [])
+
+
+
     const [isActiveModal, setIsActiveModal] = useState(false)
+    const [isActiveDeleteModal, setIsActiveDeleteModal] = useState(false)
     const handleShowPassoword = useCallback((account) => {
         setFocusedAccount(account)
         setIsActiveModal(true)
+    }, [])
+
+    const handleDeleteAccount = useCallback((account) => {
+        setFocusedAccount(account)
+        setIsActiveDeleteModal(true)
     }, [])
     const [focusedAccount, setFocusedAccount] = useState(null)
     const footerElemRef = useRef(null)
@@ -74,6 +85,23 @@ const AccountList = ({ addAccount = () => { }, searchVal, ...props }) => {
 
         }
     }, [isLoading, isEnd, error])
+
+    const [isDeleting, setIsDeleteing] = useState(false)
+    const deleteAccount = useCallback(async (account) => {
+        setIsDeleteing(true)
+        try {
+            await AccountService.deleteAccount(account.id)
+            setAccounts((prev) => prev.filter((a) => a !== account))
+            setIsDeleteing(false)
+            toast.success('Аккаунт удалён')
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setIsActiveDeleteModal(false)
+            setIsDeleteing(false)
+        }
+
+    }, [])
     return <Wrapper children_margin verticalMargin direaction="col">
         <Modal isActive={isActiveModal} setIsActive={setIsActiveModal}>
             {focusedAccount && <Wrapper direaction="col" >
@@ -82,8 +110,26 @@ const AccountList = ({ addAccount = () => { }, searchVal, ...props }) => {
             </Wrapper>
             }
         </Modal>
+        <Modal isActive={isActiveDeleteModal} setIsActive={setIsActiveDeleteModal}>
+            {focusedAccount && <>
+                <Wrapper align="center" direaction="col" >
+                    <span>Вы уверены, что хотети удалить</span>
+                    <span>аккаунт {focusedAccount.login} ?</span>
+                </Wrapper>
+                <Wrapper style={{ marginBottom: 0 }} verticalMargin justify="between">
+                    <Button isLoading={isDeleting} onClick={() => {
+                        deleteAccount(focusedAccount)
+                    }} styleType="warning">Удалить</Button>
+                    <Button onClick={() => {
+                        setFocusedAccount(null)
+                        setIsActiveDeleteModal(false)
+                    }} styleType="common">Отмена</Button>
+                </Wrapper>
+            </>
+            }
+        </Modal>
         {accounts && accounts.map((account) => {
-            return <AccountItem handleShowPassowrd={handleShowPassoword} key={account.id} account={account}></AccountItem>
+            return <AccountItem handleDeleteAccount={handleDeleteAccount} handleShowPassowrd={handleShowPassoword} key={account.id} account={account}></AccountItem>
         })}
         {error && <Wrapper children_margin direaction="col" justify="center" align="center"><span>Ошибка: {error}</span><span>Попробуйте обновить страницу</span></Wrapper>}
         {isLoading && <Wrapper verticalMargin justify="center"> <Loading size="large" /></Wrapper>}

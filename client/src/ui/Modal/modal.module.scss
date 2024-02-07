@@ -6,6 +6,7 @@
     height: 100%;
     left: 0;
     top: 0;
+    max-height: 100vh;
     background-color: rgba($gray, $alpha: 0.4);
     display: flex;
     justify-content: center;
@@ -28,6 +29,10 @@
 
 .close_wrapper {
     margin-bottom: 10px;
+}
+
+.overflow_wrapper {
+    overflow-y: auto;
 }
 
 .close {
@@ -75,7 +80,11 @@
     padding: 15px;
     background-color: white;
     transform: scale(0);
+    box-sizing: border-box;
+    max-height: 100vh;
     transition: transform 200ms;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes OpacityIn {

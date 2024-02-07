@@ -34,8 +34,10 @@ const Modal = ({ isActive, setIsActive, isCloseble = true, children, ...props })
                             <span className={classes.stick}></span>
                         </button>
                     </div>}
+                    <div className={classes.overflow_wrapper}>
+                        {children}
 
-                    {children}
+                    </div>
                 </div>
             </div>
         </DelayRemove>

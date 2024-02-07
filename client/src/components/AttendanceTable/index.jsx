@@ -138,7 +138,7 @@ const AttendanceTable = ({ groupId, date }) => {
                 <tr>
                     {timelines.map((timeline, i) => {
 
-                        return <th key={timeline.time} colSpan={colSpans.timelines[i]}>{new Date(timeline.time).getHours() + ':' + new Date(timeline.time).getMinutes()}</th>
+                        return <th key={timeline.time} colSpan={colSpans.timelines[i]}>{String(new Date(timeline.time).getHours()).padStart(2, '0') + ':' + String(new Date(timeline.time).getMinutes()).padStart(2, '0')}</th>
                     })}
                 </tr>
                 <tr>
@@ -169,8 +169,7 @@ const AttendanceTable = ({ groupId, date }) => {
                                 status = attendances[s.id][l.id]
 
                             }
-                            return <td key={s.id + l.info.join(' ') + Number(l.date)}>
-
+                            return <td key={s.id + ' ' + l.id + Number(l.date)}>
                                 <SelectAttendance schedule={l.id} student={s.id} hintPos={(students.length / 2 > studentIndex) ? 'bottom' : 'top'}
                                     fixed={verified[lessonIndex] !== null}
                                     value={

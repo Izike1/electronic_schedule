@@ -8,4 +8,18 @@ export class AccountService {
             }
         })
     }
+    static async deleteAccount(id) {
+        return await $api.delete('/auth/delete', {
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            data: { id }
+
+        })
+    }
+    static async registration(login, password, role, data) {
+        return await $api.post('/auth/registration', {
+            login, password, role, ...data
+        })
+    }
 }
