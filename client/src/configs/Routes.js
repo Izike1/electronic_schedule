@@ -5,6 +5,7 @@ import AttendancePage from '../pages/AttendancePage'
 import AttendanceRedirector from '../pages/AttendancePage/AttedanceRedirector'
 import FacultiesPage from '../pages/FacultiesPage'
 import GroupsPage from '../pages/GroupsPage'
+import GroupRedirector from '../pages/GroupsPage/GroupRedirector'
 import LoginPage from '../pages/LoginPage'
 export const RoutesConfig = {
     public: {
@@ -49,6 +50,82 @@ export const RoutesConfig = {
                 }
             ],
             redirect: '/admin/faculties'
+        },
+        'dean': {
+            pages: [{
+                path: '/faculties',
+                component: <FacultiesPage />
+            },
+            {
+                path: '/faculties/:id',
+                component: <GroupsPage />
+            },
+            {
+                path: '/groups/:id',
+                component: <AttendanceRedirector />
+            },
+            {
+                path: '/groups/:id/:date',
+                component: <AttendancePage />
+            },
+            {
+                path: '/admin/faculties',
+                component: <AdminFacultiesPage />
+            },
+            {
+                path: '/admin/faculties/:id',
+                component: <AdminGroupsPage />
+            }],
+            redirect: '/admin/faculties'
+        },
+        'teacher': {
+            pages: [{
+                path: '/faculties',
+                component: <FacultiesPage />
+            },
+            {
+                path: '/faculties/:id',
+                component: <GroupsPage />
+            },
+            {
+                path: '/groups/:id',
+                component: <AttendanceRedirector />
+            },
+            {
+                path: '/groups/:id/:date',
+                component: <AttendancePage />
+            }],
+            redirect: '/faculties'
+        },
+        'headman': {
+            pages: [{
+                path: '/groups/:id',
+                component: <AttendanceRedirector />
+            },
+            {
+                path: '/groups/:id/:date',
+                component: <AttendancePage />
+            },
+            {
+                path: '/groups',
+                component: <GroupRedirector />
+            }],
+            redirect: '/groups'
+        },
+        'group': {
+            pages: [{
+                path: '/groups/:id',
+                component: <AttendanceRedirector />
+            },
+            {
+                path: '/groups/:id/:date',
+                component: <AttendancePage />
+            },
+            {
+                path: '/groups',
+                component: <GroupRedirector />
+            }],
+            redirect: '/groups'
         }
     }
 }
