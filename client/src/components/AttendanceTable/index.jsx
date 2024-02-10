@@ -6,8 +6,11 @@ import SelectAttendance from '../SelectAttendance'
 import VerifyBlock from './VerifyBlock'
 import Wrapper from '../../ui/Wrapper'
 import { AttendanceService } from '../../api/AttendanceService'
+import { useSelector } from 'react-redux'
 
 const AttendanceTable = ({ groupId, date }) => {
+
+    const { user } = useSelector(({ authReducer }) => authReducer)
 
     const [verified, setVerified] = useState([])
     const isTwomorrow = useMemo(() => {
@@ -171,7 +174,7 @@ const AttendanceTable = ({ groupId, date }) => {
                             }
                             return <td key={s.id + ' ' + l.id + Number(l.date)}>
                                 <SelectAttendance schedule={l.id} student={s.id} hintPos={(students.length / 2 > studentIndex) ? 'bottom' : 'top'}
-                                    fixed={verified[lessonIndex] !== null}
+                                    fixed={verified[lessonIndex] !== null || (user.role !== 'admin' && user.role !== 'teacher' && user.role !== 'headman')}
                                     value={
                                         status
                                     } />
