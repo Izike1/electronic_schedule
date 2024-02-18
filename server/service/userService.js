@@ -4,38 +4,44 @@ const { writeToLogFile } = require('../logger/index')
 const sequelize = require('../db')
 class UserService {
     async createUser(firstName, lastName, middleName, groupId, authId) {
-        const candidate = await User_info.findOne({
-            where: {
+        const result = await sequelize.transaction(async (transaction) => {
+            const candidate = await User_info.findOne({
+                where: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    middle_name: middleName || null,
+                },
+                transaction: transaction,
+            });
+
+            if (candidate) {
+                throw new Error('Пользователь существует');
+            }
+
+            const userInfo = await User_info.create({
                 first_name: firstName,
                 last_name: lastName,
-                middle_name: middleName || null,
+                middle_name: middleName,
+            }, { transaction: transaction });
 
+            const userData = { UserInfoId: userInfo.id };
+
+            if (groupId !== null) {
+                userData.GroupId = groupId;
             }
-        })
-        if (candidate) {
-            throw ApiError.badRequest('Пользователь существует')
-        }
-        const userInfo = await User_info.create({
-            first_name: firstName,
-            last_name: lastName,
-            middle_name: middleName,
-        })
-        let user;
-        const userData = { UserInfoId: userInfo.id };
 
-        if (groupId !== null) {
-            userData.GroupId = groupId;
-        }
+            if (authId !== null) {
+                userData.AuthId = authId;
+            }
 
-        if (authId !== null) {
-            userData.AuthId = authId;
-        }
-        writeToLogFile(`Создание пользователя ${firstName}`)
-        user = await User.create(userData);
-        return {
-            userInfo,
-            user
-        }
+            const user = await User.create(userData, { transaction: transaction });
+
+            return user;
+        });
+
+        writeToLogFile(`Создание пользователя ${firstName}`);
+
+        return result;
     }
 
     async findUserByAuthId(authId) {
