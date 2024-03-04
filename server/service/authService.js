@@ -45,7 +45,6 @@ class AuthService {
     }
 
     async refresh(refreshToken) {
-        console.log(refreshToken)
         if (!refreshToken) {
             throw ApiError.unauthorizedError()
         }
@@ -66,10 +65,12 @@ class AuthService {
     }
 
     async delete(authId) {
-        writeToLogFile(`Удаление пользователя ${authId}`)
         const user = await User.findOne({ where: { authId: authId } })
-        console.log(user)
+
         if (!user) throw ApiError.badRequest("Пользователь не найден")
+
+        writeToLogFile(`Удаление пользователя ${authId}`)
+
         return await sequelize.transaction(async (t) => {
 
             await User.destroy({
@@ -96,7 +97,9 @@ class AuthService {
 
     async getAuthsByChunks(chunkSize, pageNumber, search) {
         const offset = (pageNumber - 1) * chunkSize;
+
         writeToLogFile(`Получение пользователей ${search}`)
+
         return await Auth.findAll({
             offset: Number(offset),
             limit: Number(chunkSize),
@@ -105,11 +108,6 @@ class AuthService {
             }
         });
     }
-
-    async getAuthsByRoles(roles) {
-
-    }
-
 }
 
 module.exports = new AuthService();

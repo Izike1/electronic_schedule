@@ -51,10 +51,10 @@ class GroupController {
         }
     }
 
-    async removeGroup(req, res, next) {
+    async deleteGroup(req, res, next) {
         try {
             const { id } = res.body;
-            const group = await groupService.removeGroup(id)
+            const group = await groupService.deleteGroup(id)
             res.json(group)
         } catch (e) {
             next(e)

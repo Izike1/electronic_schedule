@@ -11,6 +11,6 @@ router.get('/getSelfGroups', authMiddleware(), groupController.getSelfGroup)
 router.get('/getGroups', authMiddleware(), groupController.getGroups)
 router.get('/getGroupsByFaculty', authMiddleware(), groupController.getGroupsByFaculty)
 
-router.delete('/removeGroup', authMiddleware(), roleMiddlewareCreator(['admin']), groupController.removeGroup)
+router.delete('/deleteGroup', authMiddleware(), roleMiddlewareCreator(['admin']), groupController.deleteGroup)
 
 module.exports = router

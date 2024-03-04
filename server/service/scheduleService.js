@@ -24,7 +24,6 @@ class ScheduleService {
         }
         const group = await Groups.findOne({ where: { name: name } })
         if (!group) {
-            console.log('Ошибка получения группы')
             writeToLogFile('Ошибка получения группы')
             throw ApiError.badRequest('Ошибка получения группы')
         }
@@ -94,8 +93,6 @@ class ScheduleService {
             process.endProcess()
             throw e
         }
-
-
     }
 
     async setSchedule(authId, scheduleId) {
