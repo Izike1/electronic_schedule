@@ -45,7 +45,6 @@ class UserController {
     async removeUser(req, res, next) {
         try {
             const { id } = req.body;
-
             const userData = await userService.removeUser(id);
             res.json(userData)
         } catch (e) {
