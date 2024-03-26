@@ -4,6 +4,6 @@ const analyticsController = require('../controllers/analyticsController');
 const authMiddleware = require('../middleware/authMiddleware');
 const roleMiddlewareCreator = require("../middleware/roleMiddlewareCreator");
 
-router.get('/getAnalytics', authMiddleware(), roleMiddlewareCreator(['teacher', 'admin', 'dean']));
+router.get('/getAnalyticsByStudentName', analyticsController.getAnalyticsByStudentName);
 
 module.exports = router;

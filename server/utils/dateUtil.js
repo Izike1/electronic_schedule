@@ -1,3 +1,20 @@
+const convertUnixToDate = unixTimestamp => {
+    const date = new Date(unixTimestamp * 1000);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+const convertDate = date => {
+    const timestamp = Date.parse(date);
+    return timestamp / 1000;
+}
+
 const currentDateRound = (day) => {
     let startDate = new Date(day)
     startDate.setMilliseconds(0);
@@ -22,7 +39,7 @@ const getDateRange = (day) => {
     endDate.setMinutes(59)
     endDate.setHours(23)
     endDate = endDate.toISOString()
-    return [startDate,endDate]
+    return [startDate, endDate]
 }
 const stringToDate = (string) => {
     const dateRegex = /.*?(\d{1,2})\.(\d{1,2})\.(\d{4,})/gm
@@ -96,4 +113,4 @@ const dateToStartWeek = (val) => {
 
 
 }
-module.exports = { stringToDate, dateToString, dateToStartWeek, stringToTime, getDateRange, currentDateRound }
+module.exports = { stringToDate, dateToString, dateToStartWeek, stringToTime, getDateRange, currentDateRound, convertDate, convertUnixToDate }
