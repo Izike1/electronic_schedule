@@ -90,22 +90,23 @@ class AnalyticsService {
     }
 
     async getAnalyticsByGroup(groupName, startDate, endDate) {
+
         const group = await Groups.findOne({
-            where: {
-                name: groupName
-            },
-            include: [{ model: User }]
+            where: { name: groupName },
+            include: [{
+                model: User
+            }]
         });
 
         if (!group) {
             throw ApiError.badRequest('Группа не найдена');
         }
 
+        const students = await User.findAll({ where: { GroupId: group.id } })
+        const userIds = students.map(user => user.dataValues.id);
         const attendance = await Attendance.findAll({
             where: {
-                UserId: {
-                    [Op.in]: group.Users.map(user => user.id)
-                },
+                UserId: userIds,
                 createdAt: {
                     [Op.between]: [new Date(startDate), new Date(endDate)]
                 }
@@ -138,11 +139,9 @@ class AnalyticsService {
                 }
             ]
         });
-
         const workbook = new Excel.Workbook();
 
         const worksheet = workbook.addWorksheet('Analytics');
-
         worksheet.columns = [
             { header: 'ID', key: 'id', width: 10 },
             { header: 'Группа', key: 'group', width: 30 },
