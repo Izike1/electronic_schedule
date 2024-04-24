@@ -8,7 +8,7 @@ router.post('/createGroup', authMiddleware(), roleMiddlewareCreator(['admin']), 
 router.post('/changeGroup', authMiddleware(), roleMiddlewareCreator(['admin']), groupController.changeGroup)
 
 router.get('/getSelfGroups', authMiddleware(), groupController.getSelfGroup)
-router.get('/getGroups', authMiddleware(), groupController.getGroups)
+// router.get('/getGroups', authMiddleware(), groupController.getGroups)
 router.get('/getGroupsByFaculty', authMiddleware(), groupController.getGroupsByFaculty)
 
 router.delete('/deleteGroup', authMiddleware(), roleMiddlewareCreator(['admin']), groupController.deleteGroup)

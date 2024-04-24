@@ -19,16 +19,16 @@ class GroupService {
             throw ApiError.badRequest('Группа не существует')
         } else {
             group.name = groupName
-            group.facyltyId = facultyId
+            group.facultyId = facultyId
             await group.save()
         }
         return group
     }
 
-    async getGroups(id) {
-        writeToLogFile(`Получение групп`)
-        return await Groups.findOne({ where: { id: id } })
-    }
+    // async getGroups(id) {
+    //     writeToLogFile(`Получение групп`)
+    //     return await Groups.findAll({ where: { id: id } })
+    // }
 
     async getSelfGroup(id) {
         const user = await User.findOne({ where: { id: id } })
@@ -44,13 +44,23 @@ class GroupService {
     }
 
     async deleteGroup(groupId) {
-        const group = await Groups.findOne({ where: { id: groupId } })
+        const group = await Groups.findOne({ where: { id: groupId } });
+
         if (!group) {
-            throw ApiError.badRequest('Группа не существует')
+            throw ApiError.badRequest('Группа не существует');
         }
-        writeToLogFile(`Удаление группы ${group.name}`)
-        return await Groups.destroy({ where: { id: groupId } })
+
+        writeToLogFile(`Удаление группы ${group.name}`);
+
+        const students = await User.findAll({ where: { GroupId: groupId } });
+
+        for (const student of students) {
+            await student.destroy();
+        }
+
+        return await Groups.destroy({ where: { id: groupId } });
     }
+
 }
 
 module.exports = new GroupService()

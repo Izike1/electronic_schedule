@@ -30,6 +30,20 @@ class AnalyticsController {
         }
     }
 
+    async getAnalyticsByFaculty(req, res, next) {
+        try {
+            const { faculty, startDate, endDate } = req.query;
+            const fileBuffer = await analyticsService.getAnalyticsByGroup(faculty, startDate, endDate);
+            res.set({
+                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition': `attachment; filename="AnalitikaByGroup.xlsx"`,
+            });
+            res.send(fileBuffer);
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 module.exports = new AnalyticsController();

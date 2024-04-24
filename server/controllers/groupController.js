@@ -22,14 +22,14 @@ class GroupController {
         }
     }
 
-    async getGroups(req, res, next) {
-        try {
-            const groups = await groupService.getGroups();
-            res.json(groups)
-        } catch (e) {
-            next(e)
-        }
-    }
+    // async getGroups(req, res, next) {
+    //     try {
+    //         const groups = await groupService.getGroups();
+    //         res.json(groups)
+    //     } catch (e) {
+    //         next(e)
+    //     }
+    // }
 
     async getSelfGroup(req, res, next) {
         try {
