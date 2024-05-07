@@ -3,7 +3,7 @@ const facultyService = require('../service/facultyService')
 class FacultyController {
     async createFaculty(req, res, next) {
         try {
-            const {facultyName} = req.body;
+            const { facultyName } = req.body;
             const faculty = await facultyService.createFaculty(facultyName)
             res.json(faculty)
         } catch (e) {
@@ -13,7 +13,7 @@ class FacultyController {
 
     async changeFaculty(req, res, next) {
         try {
-            const {id, facultyName} = req.body;
+            const { id, facultyName } = req.body;
             const faculty = await facultyService.changeFaculty(id, facultyName)
             res.json(faculty)
         } catch (e) {
@@ -32,6 +32,8 @@ class FacultyController {
 
     async deleteFaculty(req, res, next) {
         try {
+            const { id } = req.body;
+            console.log(id)
             const faculty = await facultyService.deleteFaculty(id)
             res.json(faculty)
         } catch (e) {
