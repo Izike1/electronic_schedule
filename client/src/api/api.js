@@ -4,7 +4,7 @@ export const API_URL = `http://localhost:5000/api`
 export const WEB_URL = `http://localhost:3000`
 
 // export const API_URL = `http://uspev.agpu.net/api`
-// export const WEB_URL = `http://uspev.agpu.net/api`
+// export const WEB_URL = `http://uspev.agpu.net/`
 
 const $api = axios.create({
     withCredentials: true,
@@ -30,7 +30,7 @@ $api.interceptors.response.use((config) => {
         if (error.response.status === 401 && !originalRequest._isRetry && error.config) {
             originalRequest._isRetry = true
 
-            const response = await axios.get(API_URL + '/auth/refresh', { crossDomain: true, withCredentials: true })
+            const response = await axios.get(API_URL + '/auth/refresh', { withCredentials: true })
             localStorage.setItem('token', response.data.accessToken)
             return $api(originalRequest)
         } else {

@@ -7,6 +7,8 @@ import FormEditFaculty from "../FormEditFaculty"
 import ModalForm from "../ModalForm"
 import classes from './admin-panel-faculty.module.scss'
 import FormGetFacultyAnalize from "../FormGetFacultyAnalize"
+import { FacultyService } from "../../api/FacultyService"
+import { toast } from "react-toastify"
 const AdminPanelFaculty = ({ facultyName, facultyId, onChangeFaculty = () => { }, onDeleteFaculty = () => { }, ...props }) => {
     const [activeFormEdit, setActiveFormEdit] = useState(false)
     const [activeDeletePrompt, setActiveDeletePrompt] = useState(false)
@@ -26,10 +28,20 @@ const AdminPanelFaculty = ({ facultyName, facultyId, onChangeFaculty = () => { }
                         <Button size="medium" styleType="warning" onClick={(e) => {
                             e.preventDefault()
                             setActiveDeletePrompt(false)
-                            onDeleteFaculty()
+                            const p = FacultyService.deleteFaculty(facultyId)
+                            toast.promise(p, {
+                                pending: 'Удаление факультета'
+                            })
+                            p.then(() => {
+                                onDeleteFaculty()
+                            }).catch(() => {
+
+                            })
+
                         }}>Удалить</Button>
                         <Button onClick={(e) => {
                             e.preventDefault()
+
                             setActiveDeletePrompt(false)
                         }} size="medium" >Отмена</Button>
                     </Wrapper>
