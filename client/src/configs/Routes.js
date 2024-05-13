@@ -1,6 +1,9 @@
 import AdminAccountsPage from '../pages/AdminPages/AdminAccountsPage'
 import AdminFacultiesPage from '../pages/AdminPages/AdminFacultiesPage'
 import AdminGroupsPage from '../pages/AdminPages/AdminGroupsPage'
+import AnalizePage from '../pages/AnalizePage'
+import CommonAnalizePage from '../pages/AnalizePage/CommonAnalizePage'
+import TeacherAnalizePage from '../pages/AnalizePage/TeacherAnalizePage'
 import AttendancePage from '../pages/AttendancePage'
 import AttendanceRedirector from '../pages/AttendancePage/AttedanceRedirector'
 import FacultiesPage from '../pages/FacultiesPage'
@@ -22,6 +25,18 @@ export const RoutesConfig = {
                 {
                     path: '/faculties',
                     component: <FacultiesPage />
+                },
+                {
+                    path: '/analize',
+                    component: <AnalizePage />
+                },
+                {
+                    path: '/analize/subjects',
+                    component: <TeacherAnalizePage />
+                },
+                {
+                    path: '/analize/common',
+                    component: <CommonAnalizePage />
                 },
                 {
                     path: '/faculties/:id',

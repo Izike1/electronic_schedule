@@ -18,8 +18,8 @@ class AnalyticsController {
 
     async getAnalyticsByGroupName(req, res, next) {
         try {
-            const { groupName, startDate, endDate } = req.query;
-            const fileBuffer = await analyticsService.getAnalyticsByGroup(groupName, startDate, endDate);
+            const { groupId, startDate, endDate } = req.query;
+            const fileBuffer = await analyticsService.getAnalyticsByGroup(groupId, startDate, endDate);
             res.set({
                 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'Content-Disposition': `attachment; filename="AnalitikaByGroup.xlsx"`,
@@ -32,8 +32,8 @@ class AnalyticsController {
 
     async getAnalyticsByFaculty(req, res, next) {
         try {
-            const { faculty, startDate, endDate } = req.query;
-            const fileBuffer = await analyticsService.getAnalyticsByGroup(faculty, startDate, endDate);
+            const { facultyId, startDate, endDate } = req.query;
+            const fileBuffer = await analyticsService.getAnalyticsByFaculty(facultyId, startDate, endDate);
             res.set({
                 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'Content-Disposition': `attachment; filename="AnalitikaByGroup.xlsx"`,

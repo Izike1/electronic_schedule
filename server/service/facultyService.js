@@ -11,7 +11,15 @@ class FacultyService {
         }
         return await Faculty.create({ name: facultyName })
     }
+    async getFacultyInfo(facultyId) {
+        const faculty = await Faculty.findOne({ where: { id: facultyId } })
+        if (!faculty) {
+            writeToLogFile(`Факультет не существует`)
+            throw ApiError.badRequest('Факультета не существует')
+        }
 
+        return faculty
+    }
     async changeFaculty(id, facultyName) {
         const faculty = await Faculty.findOne({ where: { id: id } })
         if (!faculty) {

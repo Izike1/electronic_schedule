@@ -8,5 +8,5 @@ router.post('/createFaculty', authMiddleware(), roleMiddlewareCreator(['admin'])
 router.post('/changeFaculty', authMiddleware(), roleMiddlewareCreator(['admin']), facultyController.changeFaculty)
 router.delete('/deleteFaculty', authMiddleware(), roleMiddlewareCreator(['admin']), facultyController.deleteFaculty)
 router.get('/getFaculty', authMiddleware(), facultyController.getFaculties)
-
+router.get('/getFacultyInfo', authMiddleware(), facultyController.getFacultyInfo)
 module.exports = router

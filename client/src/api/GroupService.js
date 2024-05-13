@@ -4,8 +4,12 @@ export class GroupService {
     static async getSelfGroup() {
         return await $api.get('/group/getSelfGroups')
     }
+
     static async createGroup(facultyId, name) {
         return await $api.post('/group/createGroup', { groupName: name, facultyId })
+    }
+    static async deleteGroup(id) {
+        $api.delete('/group/deleteGroup', { data: { id } })
     }
     static async getGroupsByFactulty(id) {
 

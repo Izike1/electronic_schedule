@@ -1,0 +1,22 @@
+@import '../../configs/colors.scss';
+
+.form {
+    min-width: 270px;
+    background-color: $pale_blue;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.label_date {
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px;
+}
+
+.date {
+    border: none;
+    outline: none;
+}

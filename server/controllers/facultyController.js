@@ -29,6 +29,15 @@ class FacultyController {
             next(e)
         }
     }
+    async getFacultyInfo(req, res, next) {
+        try {
+            const { facultyId } = req.query
+            const faculty = await facultyService.getFacultyInfo(facultyId)
+            res.json(faculty)
+        } catch (e) {
+            next(e)
+        }
+    }
 
     async deleteFaculty(req, res, next) {
         try {

@@ -99,9 +99,9 @@ class AnalyticsService {
         return this.createExcelWorkbook(rows, 'student_analytics.xlsx');
     }
 
-    async getAnalyticsByGroup(groupName, startDate, endDate) {
+    async getAnalyticsByGroup(groupId, startDate, endDate) {
         const group = await Groups.findOne({
-            where: { name: groupName },
+            where: { id: groupId },
             include: [{ model: User }]
         });
 
@@ -148,7 +148,7 @@ class AnalyticsService {
 
         const rows = attendance.map(item => ({
             id: item.id,
-            group: groupName,
+            group: group.name,
             lesson: item.Schedule.Lessons[0].name,
             lastName: item.User.User_info.last_name,
             firstName: item.User.User_info.first_name,
@@ -160,9 +160,9 @@ class AnalyticsService {
         return this.createExcelWorkbook(rows, 'group_analytics.xlsx');
     }
 
-    async getAnalyticsByFaculty(facultyName, startDate, endDate) {
+    async getAnalyticsByFaculty(facultyId, startDate, endDate) {
         const faculty = await Faculty.findOne({
-            where: { name: facultyName },
+            where: { id: facultyId },
             include: [{ model: Groups, include: [{ model: User }] }],
         });
 

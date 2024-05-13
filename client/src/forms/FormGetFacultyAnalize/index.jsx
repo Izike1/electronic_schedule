@@ -4,7 +4,8 @@ import Wrapper from "../../ui/Wrapper";
 import ModalForm from "../ModalForm"
 import Button from "../../ui/Button";
 import { toast } from 'react-toastify'
-const FormGetFacultyAnalize = (props) => {
+import { AnalizeService } from "../../api/AnalizeService";
+const FormGetFacultyAnalize = ({ facultyId }) => {
     const { register, handleSubmit, formState } = useForm({
         mode: "all",
     });
@@ -16,26 +17,28 @@ const FormGetFacultyAnalize = (props) => {
         if (date_from > date_to) {
             return toast.error('"От" должно быть меньше чем "До"')
         }
-
+        AnalizeService.analizeByFaculty(facultyId, data.date_from, data.date_to)
+        hideModal()
     })}>
         <Wrapper direaction="col" justify="between" align="center" children_margin wrap={false} >
             <label>
                 <span>От: </span>
                 <input
                     {...register('date_from', { required: true })}
-                    type="date" />
+                    type="date" defaultValue={new Date(2023, 7, 1).toISOString().slice(0, 10)} />
             </label>
             <label>
                 <span>До: </span>
                 <input
                     {...register('date_to', { required: true })}
-                    type="date" />
+                    type="date" defaultValue={new Date().toISOString().slice(0, 10)} />
             </label>
 
             <Wrapper justify="around" align="center" self_stretch >
                 <Button size="medium" styleType="active" disabled={!isDirty || !isValid}>Получить</Button>
                 <Button onClick={(e) => {
                     e.preventDefault()
+
                     hideModal()
                 }} size="medium" >Отмена</Button>
             </Wrapper>

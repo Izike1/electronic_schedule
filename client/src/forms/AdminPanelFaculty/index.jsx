@@ -13,9 +13,10 @@ const AdminPanelFaculty = ({ facultyName, facultyId, onChangeFaculty = () => { }
     const [activeFormEdit, setActiveFormEdit] = useState(false)
     const [activeDeletePrompt, setActiveDeletePrompt] = useState(false)
     const [activeFormAnalize, setActiveFormAnalize] = useState(false)
-    return <AdminPanel title={`Панель администратора ${facultyName}`}>
+
+    return <AdminPanel title={`Панель администратора ${facultyName || ''}`}>
         <Modal isActive={activeFormEdit} setIsActive={setActiveFormEdit}>
-            <FormEditFaculty onSuccess={(data) => {
+            <FormEditFaculty facultyId={facultyId} onSuccess={(data) => {
                 onChangeFaculty(data.name)
                 setActiveFormEdit(false)
             }} facultyName={facultyName} />
@@ -49,7 +50,7 @@ const AdminPanelFaculty = ({ facultyName, facultyId, onChangeFaculty = () => { }
             </ModalForm>
         </Modal>
         <Modal isActive={activeFormAnalize} setIsActive={setActiveFormAnalize}>
-            <FormGetFacultyAnalize />
+            <FormGetFacultyAnalize facultyId={facultyId} />
         </Modal>
         <Wrapper wrap={false} classStr={classes.btn_wrapper} verticalMargin justify="start">
             <Wrapper style={{

@@ -13,6 +13,10 @@ export const NavigationRoutesConfig = {
                 name: 'Аккаунты',
                 link: '/admin/accounts'
             },
+            {
+                name: 'Аналитика',
+                link: '/analize'
+            },
         ]
     }
 }

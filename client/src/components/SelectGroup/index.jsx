@@ -15,6 +15,7 @@ const SelectGroup = ({ field, facultyId, ...props }) => {
         placeholder={"Группа"}
         noOptionsMessage={() => "Групп не найдено"}
         isLoading={isLoading}
+
         {...props}
         {...field}
         options={resp?.data.map((f) => ({ value: f.id, label: f.name })) || []}
