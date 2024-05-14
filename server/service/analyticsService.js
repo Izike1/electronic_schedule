@@ -226,6 +226,77 @@ class AnalyticsService {
 
         return this.createExcelWorkbook(rows, 'faculty_analytics.xlsx');
     }
+
+    async getAnalyticsByLessonName(lessonName, startDate, endDate) {
+        const lesson = await Lesson.findOne({
+            where: { name: lessonName },
+            include: [{ model: Schedule }],
+        });
+
+        if (!lesson) {
+            throw ApiError.badRequest('Предмет не найден');
+        }
+
+        const scheduleIds = lesson.Schedules.map((schedule) => schedule.id);
+
+        const criteria = {
+            ScheduleId: { [Op.in]: scheduleIds },
+            createdAt: {
+                [Op.between]: [new Date(startDate), new Date(endDate)],
+            },
+        };
+
+        const include = [
+            {
+                model: Schedule,
+                required: true,
+                where: {
+                    id: Sequelize.col('attendance.ScheduleId'),
+                },
+                include: [
+                    {
+                        model: Lesson,
+                        required: true,
+                        through: { attributes: ['LessonName'] },
+                    },
+                    {
+                        model: Groups,
+                        required: true,
+                    },
+                ],
+            },
+            {
+                model: User,
+                required: true,
+                include: [
+                    {
+                        model: User_info,
+                        required: true,
+                        attributes: ['last_name', 'first_name', 'middle_name'],
+                    },
+                    {
+                        model: Groups,
+                        required: true,
+                    },
+                ],
+            },
+        ];
+
+        const attendance = await this.getAttendanceData(criteria, include);
+
+        const rows = attendance.map((item) => ({
+            id: item.id,
+            group: item.User.Group.name,
+            lesson: item.Schedule.Lesson.name,
+            lastName: item.User.User_info.last_name,
+            firstName: item.User.User_info.first_name,
+            middleName: item.User.User_info.middle_name,
+            status: item.status,
+            createdAt: item.createdAt,
+        }));
+
+        return this.createExcelWorkbook(rows, 'lesson_analytics.xlsx');
+    }
 }
 
 module.exports = new AnalyticsService();

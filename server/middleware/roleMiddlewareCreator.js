@@ -5,7 +5,7 @@ const roleMiddlewareCreator = (roles) => {
         try {
             const { role } = req.user
             if (role === null) {
-                return next(ApiError.badRequest('Вы уволены, лох))'))
+                return next(ApiError.badRequest('Нет роли'))
             }
             if (!roles.includes(role)) {
                 return next(ApiError.forbidden('Нет доступа'))

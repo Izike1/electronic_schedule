@@ -7,5 +7,6 @@ const roleMiddlewareCreator = require("../middleware/roleMiddlewareCreator");
 router.get('/getAnalyticsByStudentName', authMiddleware(), roleMiddlewareCreator(['admin', 'teacher', 'dean']), analyticsController.getAnalyticsByStudentName);
 router.get('/getAnalyticsByGroupName', authMiddleware(), roleMiddlewareCreator(['admin', 'teacher', 'dean']), analyticsController.getAnalyticsByGroupName);
 router.get('/getAnalyticsByFaculty', authMiddleware(), roleMiddlewareCreator(['admin', 'dean']), analyticsController.getAnalyticsByFaculty);
+router.get('/getAnalyticsByLessonName', authMiddleware(), roleMiddlewareCreator(['admin', 'dean']), analyticsController.getAnalyticsByFaculty);
 
 module.exports = router;
