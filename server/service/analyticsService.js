@@ -35,11 +35,10 @@ class AnalyticsService {
         return buffer;
     }
 
-    async getAnalyticsByStudentName(studentLastName, studentFirstName, startDate, endDate) {
+    async getAnalyticsByStudentName(studentId, startDate, endDate) {
         const student = await User_info.findOne({
             where: {
-                last_name: studentLastName,
-                first_name: studentFirstName || ''
+                id: studentId
             },
             include: [{ model: User }]
         });

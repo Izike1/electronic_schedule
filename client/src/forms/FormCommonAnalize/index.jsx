@@ -7,6 +7,7 @@ import classes from './form-common-analize.module.scss'
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { AnalizeService } from "../../api/AnalizeService";
+import SelectStudent from "../../components/SelectStudent";
 const buttonTextByType = {
     'faculty': 'Аналитика по факультету',
     'group': 'Аналитика по группе',
@@ -19,9 +20,10 @@ const FormCommonAnalize = () => {
     });
 
     const [isLoading, setIsLoading] = useState(false)
+    const studentField = watch('student')
     const groupField = watch('group')
     const facultyField = watch('faculty')
-    const { isDirty, isValid, errors, touchedFields, dirtyFields } = formState
+    const { isDirty, isValid } = formState
 
     const analizeType = useMemo(() => {
         if (!facultyField?.value) {
@@ -30,8 +32,11 @@ const FormCommonAnalize = () => {
         if (!groupField?.value) {
             return 'faculty'
         }
-        return 'group'
-    }, [facultyField, groupField])
+        if (!studentField?.value) {
+            return 'group'
+        }
+        return 'student'
+    }, [facultyField, groupField, studentField])
     const downloadAnalize = useCallback(async (data) => {
         let date_from = new Date(data.date_from).setHours(0)
         let date_to = new Date(data.date_to).setHours(0)
@@ -54,6 +59,19 @@ const FormCommonAnalize = () => {
             try {
                 setIsLoading(true)
                 await AnalizeService.analizeByGroup(data.group.value, data.date_from, data.date_to, data.group.label)
+
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setIsLoading(false)
+            }
+
+            return
+        }
+        if (analizeType === 'student') {
+            try {
+                setIsLoading(true)
+                await AnalizeService.analizeByStudent(data.student.value, data.date_from, data.date_to, data.student.label.match(/^[a-zA-Zа-яА-ЯёЁ]+/)[0] || 'Студент')
 
             } catch (e) {
                 console.log(e)
@@ -92,20 +110,34 @@ const FormCommonAnalize = () => {
                 }
             />
             {
-                facultyField?.value &&
-                < Controller
-                    name="group"
-                    control={control}
-                    rules={{ required: false }}
-                    shouldUnregister
-                    render={({ field }) =>
-                        <SelectGroup
-                            isClearable
-                            field={field}
-                            facultyId={facultyField?.value || null} />
+                facultyField?.value && <>
+                    < Controller
+                        name="group"
+                        control={control}
+                        rules={{ required: false }}
+                        shouldUnregister
+                        render={({ field }) =>
+                            <SelectGroup
+                                isClearable
+                                field={field}
+                                facultyId={facultyField?.value || null} />
 
-                    }
-                />
+                        }
+                    />
+                    {groupField?.value && < Controller
+                        name="student"
+                        control={control}
+                        rules={{ required: false }}
+                        shouldUnregister
+                        render={({ field }) =>
+                            <SelectStudent
+                                isClearable
+                                field={field}
+                                groupId={groupField?.value || null} />
+                        }
+                    />}
+                </>
+
             }
 
             <Button isLoading={isLoading} styleType="common" size="medium" disabled={!isDirty || !isValid}>{analizeType ? buttonTextByType[analizeType] : 'Скачать'}</Button>

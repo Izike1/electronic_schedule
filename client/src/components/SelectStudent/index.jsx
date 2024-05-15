@@ -1,24 +1,30 @@
 import { useCallback } from "react"
-import { FacultyService } from "../../api/FacultyService"
 import { useFetch } from "../../hooks/useFetch"
 import Select from "react-select"
+import UserService from "../../api/UserService"
 
-const SelectStudent = ({ field, facultyId, ...props }) => {
-    const fetchFaculties = useCallback(async () => {
-        if (facultyId) {
-            return await FacultyService.getGroupsByFactulty(facultyId)
+const SelectStudent = ({ field, groupId, ...props }) => {
+    const fetchStudents = useCallback(async () => {
+        if (groupId) {
+            return await UserService.getStudentsInGroup(groupId)
         }
         return Promise.resolve(null)
-    }, [facultyId])
-    const [resp, isLoading] = useFetch(fetchFaculties)
+    }, [groupId])
+    const [resp, isLoading] = useFetch(fetchStudents)
     return <Select
-        placeholder={"Группа"}
-        noOptionsMessage={() => "Групп не найдено"}
+        placeholder={"Студент"}
+        noOptionsMessage={() => "Студент не найден"}
         isLoading={isLoading}
 
         {...props}
         {...field}
-        options={resp?.data.map((f) => ({ value: f.id, label: f.name })) || []}
+        options={resp?.data?.Users?.map((f) => {
+            const { User_info: ui } = f
+            return ({
+                value: f.id, label:
+                    `${ui.last_name} ${ui.first_name[0]}. ${(ui.middle_name ? (ui?.middle_name[0] + '.') : '')}`
+            })
+        }) || []}
     />
 }
 export default SelectStudent

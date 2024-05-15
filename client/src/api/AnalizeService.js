@@ -1,5 +1,5 @@
 import { dateToyyyyMMdd } from "../utils/dateUtil"
-import $api, { API_URL } from "./api"
+import $api from "./api"
 const body = document.body || document?.querySelector('body') || document.getElementsByTagName('body').item(0)
 const downloadFile = (blob, downloadName) => {
     const linkElem = document.createElement('a')
@@ -30,5 +30,14 @@ export class AnalizeService {
             responseType: 'blob',
         })
         downloadFile((res.data), `${groupName}-${dateToyyyyMMdd(startDate)}`)
+    }
+    static async analizeByStudent(studentId, startDate, endDate, studentShortName = 'Студент') {
+        const res = await $api.get('/analytics/getAnalyticsByStudentName', {
+            params: {
+                studentId, startDate, endDate
+            },
+            responseType: 'blob',
+        })
+        downloadFile((res.data), `${studentShortName}-${dateToyyyyMMdd(startDate)}`)
     }
 }
