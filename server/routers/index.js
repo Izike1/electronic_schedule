@@ -8,7 +8,7 @@ const facultyRouter = require('./facultyRouter')
 const scheduleRouter = require('./scheduleRouter')
 const analyticsRouter = require('./analyticsRouter')
 const attendanceRouter = require('./attendanceRouter')
-
+const lessonsRouter = require('./lessonsRouter')
 // authMiddleware(), roleMiddlewareCreator(['admin'])
 
 router.use('/auth', authRouter)
@@ -18,5 +18,6 @@ router.use('/group', groupRouter)
 router.use('/faculty', facultyRouter)
 router.use('/schedule', scheduleRouter)
 router.use('/analytics', analyticsRouter)
+router.use('/lessons', lessonsRouter)
 
 module.exports = router
