@@ -69,7 +69,9 @@ const AdminGroupsPage = (props) => {
     }), [groups, searchVal])
 
     return <Page hasNav bottomPadding>
-        {isLoadingFaculty ? <Loading size='large' /> :
+        {isLoadingFaculty ? <Wrapper fullPageOptions={{ hasNav: true }} justify="center" align="center">
+            <Loading size="large"></Loading>
+        </Wrapper> :
             <>
                 <AdminPanelFaculty facultyId={facultyId} facultyName={facultyName} onChangeFaculty={(name) => {
                     setFacultyName(name)
@@ -80,7 +82,10 @@ const AdminGroupsPage = (props) => {
                 } />
                 <Container>
                     {isLoading ?
-                        <Loading size="large" />
+                        <Wrapper justify="center" align="center">
+                            <Loading size="large"></Loading>
+                        </Wrapper>
+
                         : <>
                             <Wrapper verticalMargin> <SearchInput value={searchVal} onChange={(e) => setSearchVal(e.target.value)} /></Wrapper>
                             {filtredGroups.length > 0 ? <>
