@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Lesson } = require('../models/models')
 
 class LessonService {

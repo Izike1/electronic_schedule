@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { useFetch } from "../../hooks/useFetch"
 import Select from "react-select"
-import UserService from "../../api/UserService"
+import { UserService } from "../../api/UserService"
 
 const SelectStudent = ({ field, groupId, ...props }) => {
     const fetchStudents = useCallback(async () => {

@@ -1,6 +1,6 @@
 import $api from "./api"
 
-class UserService {
+export class UserService {
     static async getStudentsInGroup(groupId) {
         return await $api.get('user/getUsersByGroupName', {
             params: {
@@ -9,4 +9,3 @@ class UserService {
         })
     }
 }
-export default UserService

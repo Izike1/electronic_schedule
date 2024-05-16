@@ -40,4 +40,13 @@ export class AnalizeService {
         })
         downloadFile((res.data), `${studentShortName}-${dateToyyyyMMdd(startDate)}`)
     }
+    static async analizeByLesson(lessonName, startDate, endDate, lessonShortName = 'Предмет') {
+        const res = await $api.get('/analytics/getAnalyticsByLessonName', {
+            params: {
+                lessonName, startDate, endDate
+            },
+            responseType: 'blob',
+        })
+        downloadFile((res.data), `${lessonShortName}-${dateToyyyyMMdd(startDate)}`)
+    }
 }

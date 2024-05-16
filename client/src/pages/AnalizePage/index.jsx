@@ -2,12 +2,14 @@ import { useNavigate } from "react-router-dom"
 import Page from "../../components/Page"
 import Button from "../../ui/Button"
 import Wrapper from "../../ui/Wrapper"
+import { useSelector } from "react-redux"
 
 const AnalizePage = (props) => {
     const navigate = useNavigate()
+    const { role } = useSelector(({ authReducer }) => authReducer.user)
     return <Page hasNav>
         <Wrapper wrap align="center" justify="around" fullPageOptions={{ hasNav: true }}>
-            <Button onClick={() => {
+            <Button disabled={role === 'teacher'} onClick={() => {
                 navigate('common', { relative: "path" })
             }} styleType="active" size="large">Общая аналитика</Button>
             <Button onClick={() => {

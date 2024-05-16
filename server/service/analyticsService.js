@@ -235,7 +235,6 @@ class AnalyticsService {
         if (!lesson) {
             throw ApiError.badRequest('Предмет не найден');
         }
-
         const scheduleIds = lesson.Schedules.map((schedule) => schedule.id);
 
         const criteria = {
@@ -282,11 +281,10 @@ class AnalyticsService {
         ];
 
         const attendance = await this.getAttendanceData(criteria, include);
-
         const rows = attendance.map((item) => ({
             id: item.id,
             group: item.User.Group.name,
-            lesson: item.Schedule.Lesson.name,
+            lesson: item.Schedule.Lessons[0].name,
             lastName: item.User.User_info.last_name,
             firstName: item.User.User_info.first_name,
             middleName: item.User.User_info.middle_name,

@@ -1,0 +1,18 @@
+@import '../../../configs/colors.scss';
+
+.card {
+    border-radius: 30px;
+    background-color: $ll_gray;
+    display: flex;
+    text-decoration: none;
+    color: $dd_gray;
+    padding: 15px 20px;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 300ms;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($ll_gray, 5);
+    }
+}
