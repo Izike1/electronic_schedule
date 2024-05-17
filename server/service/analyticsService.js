@@ -4,6 +4,14 @@ const { Op } = require('sequelize');
 const Excel = require('exceljs');
 const { Sequelize } = require('../db');
 
+const attendancesRu = {
+    'unknown': 'неизвестно',
+    'attended': 'присутствовал',
+    'absent': 'не был',
+    'sick': 'болел',
+    'order': 'распоряжение'
+}
+
 class AnalyticsService {
     async getAttendanceData(criteria, include) {
         const attendance = await Attendance.findAll({
@@ -48,18 +56,19 @@ class AnalyticsService {
         }
 
         const criteria = {
-            UserId: student.User.id,
-            createdAt: {
-                [Op.between]: [new Date(startDate), new Date(endDate)]
-            }
+            UserId: student.User.id
         };
-
+        const endDateObject = new Date(endDate)
+        endDateObject.setDate(endDateObject.getDate() + 1)
         const include = [
             {
                 model: Schedule,
                 required: true,
                 where: {
-                    id: Sequelize.col('attendance.ScheduleId')
+                    id: Sequelize.col('attendance.ScheduleId'),
+                    date: {
+                        [Op.between]: [new Date(startDate), endDateObject]
+                    }
                 },
                 include: [
                     {
@@ -91,7 +100,7 @@ class AnalyticsService {
             lastName: item.User.User_info.last_name,
             firstName: item.User.User_info.first_name,
             middleName: item.User.User_info.middle_name,
-            status: item.status,
+            status: attendancesRu[item.status],
             createdAt: item.createdAt
         }));
 
@@ -109,18 +118,19 @@ class AnalyticsService {
         }
 
         const criteria = {
-            UserId: { [Op.in]: group.Users.map(user => user.id) },
-            createdAt: {
-                [Op.between]: [new Date(startDate), new Date(endDate)]
-            }
+            UserId: { [Op.in]: group.Users.map(user => user.id) }
         };
-
+        const endDateObject = new Date(endDate)
+        endDateObject.setDate(endDateObject.getDate() + 1)
         const include = [
             {
                 model: Schedule,
                 required: true,
                 where: {
-                    id: Sequelize.col('attendance.ScheduleId')
+                    id: Sequelize.col('attendance.ScheduleId'),
+                    date: {
+                        [Op.between]: [new Date(startDate), endDateObject]
+                    }
                 },
                 include: [
                     {
@@ -152,7 +162,7 @@ class AnalyticsService {
             lastName: item.User.User_info.last_name,
             firstName: item.User.User_info.first_name,
             middleName: item.User.User_info.middle_name,
-            status: item.status,
+            status: attendancesRu[item.status],
             createdAt: item.createdAt
         }));
 
@@ -173,17 +183,18 @@ class AnalyticsService {
 
         const criteria = {
             UserId: { [Op.in]: studentIds },
-            createdAt: {
-                [Op.between]: [new Date(startDate), new Date(endDate)]
-            }
         };
-
+        const endDateObject = new Date(endDate)
+        endDateObject.setDate(endDateObject.getDate() + 1)
         const include = [
             {
                 model: Schedule,
                 required: true,
                 where: {
-                    id: Sequelize.col('attendance.ScheduleId')
+                    id: Sequelize.col('attendance.ScheduleId'),
+                    date: {
+                        [Op.between]: [new Date(startDate), endDateObject]
+                    }
                 },
                 include: [
                     {
@@ -218,7 +229,7 @@ class AnalyticsService {
                 lastName: item.User.User_info.last_name,
                 firstName: item.User.User_info.first_name,
                 middleName: item.User.User_info.middle_name,
-                status: item.status,
+                status: attendancesRu[item.status],
                 createdAt: item.createdAt
             };
         });
@@ -238,18 +249,19 @@ class AnalyticsService {
         const scheduleIds = lesson.Schedules.map((schedule) => schedule.id);
 
         const criteria = {
-            ScheduleId: { [Op.in]: scheduleIds },
-            createdAt: {
-                [Op.between]: [new Date(startDate), new Date(endDate)],
-            },
+            ScheduleId: { [Op.in]: scheduleIds }
         };
-
+        const endDateObject = new Date(endDate)
+        endDateObject.setDate(endDateObject.getDate() + 1)
         const include = [
             {
                 model: Schedule,
                 required: true,
                 where: {
                     id: Sequelize.col('attendance.ScheduleId'),
+                    date: {
+                        [Op.between]: [new Date(startDate), endDateObject]
+                    }
                 },
                 include: [
                     {
@@ -288,7 +300,7 @@ class AnalyticsService {
             lastName: item.User.User_info.last_name,
             firstName: item.User.User_info.first_name,
             middleName: item.User.User_info.middle_name,
-            status: item.status,
+            status: attendancesRu[item.status],
             createdAt: item.createdAt,
         }));
 
