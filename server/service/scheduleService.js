@@ -98,6 +98,7 @@ class ScheduleService {
     async setSchedule(authId, scheduleId) {
         const schedule = await Schedule.findOne({ where: { id: scheduleId } });
         const user = await User.findOne({ where: { AuthId: authId } });
+        console.log(user)
         if (!schedule || !user) {
             console.log('Расписание или пользователь не найдены');
             writeToLogFile('Расписание или пользователь не найдены');

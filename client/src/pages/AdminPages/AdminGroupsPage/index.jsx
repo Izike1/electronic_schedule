@@ -14,6 +14,8 @@ import AdminPanelFaculty from '../../../forms/AdminPanelFaculty'
 import { useFetch } from '../../../hooks/useFetch'
 import { FacultyService } from '../../../api/FacultyService'
 import Loading from '../../../ui/Loading'
+import { GroupService } from '../../../api/GroupService'
+import { toast } from 'react-toastify'
 
 const AdminGroupsPage = (props) => {
 
@@ -120,11 +122,21 @@ const AdminGroupsPage = (props) => {
                             <Wrapper justify='around' verticalMargin>
                                 <Button size="medium" styleType="warning" onClick={(e) => {
                                     e.preventDefault()
+                                    const promise = GroupService.deleteGroup(deleteFocus.id)
+                                    toast.promise(promise, {
+                                        pending: "Удаление",
+                                        success: "Успешно удалено"
+                                    })
                                     setActiveDeletePrompt(false)
                                     setDeleteFocus(null)
-                                    setGroups((p) => {
-                                        return p.filter((g) => g.id !== deleteFocus?.id)
+                                    promise.then(() => {
+                                        setGroups((p) => {
+                                            return p.filter((g) => g.id !== deleteFocus?.id)
+                                        })
+                                    }).catch(() => {
+                                        console.log('Ошибка удаления')
                                     })
+
                                 }}>Удалить</Button>
                                 <Button onClick={(e) => {
                                     e.preventDefault()

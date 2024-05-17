@@ -9,7 +9,7 @@ export class GroupService {
         return await $api.post('/group/createGroup', { groupName: name, facultyId })
     }
     static async deleteGroup(id) {
-        $api.delete('/group/deleteGroup', { data: { id } })
+        return await $api.delete('/group/deleteGroup', { data: { id } })
     }
     static async getGroupsByFactulty(id) {
 

@@ -10,7 +10,8 @@ const AnalizePage = (props) => {
     return <Page hasNav>
         <Wrapper wrap align="center" justify="around" fullPageOptions={{ hasNav: true }}>
             <Button disabled={role === 'teacher'} onClick={() => {
-                navigate('common', { relative: "path" })
+                if (role !== 'teacher')
+                    navigate('common', { relative: "path" })
             }} styleType="active" size="large">Общая аналитика</Button>
             <Button onClick={() => {
                 navigate('subjects', { relative: "path" })

@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 import classes from './verify.module.scss';
-import { useAuth } from '../../../hooks/useAuth';
 import { useClassMap } from '../../../hooks/useClassMap';
 import Loading from '../../../ui/Loading';
-import { updateVerify } from '../../../api/Test/devVerify';
+
 import { useSelector } from 'react-redux';
 import { AttendanceService } from '../../../api/AttendanceService';
 const VerifyBlock = ({ schedule, onChange = (e) => { console.log(e) }, verifiedBy = null, ...props }) => {

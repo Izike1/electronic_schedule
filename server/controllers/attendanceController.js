@@ -12,7 +12,7 @@ class AttendanceController {
                 'order'
             ]
             const { status, userId, scheduleId } = req.body;
-            if(!statuses.includes(status)){
+            if (!statuses.includes(status)) {
                 throw ApiError.badRequest('Неправильный статус')
             }
             const attendance = await attendanceService.createAttendance(status, userId, scheduleId);
@@ -26,11 +26,11 @@ class AttendanceController {
         try {
             let attendance;
             const { groupId, currentDate } = req.query;
-            const {user}= req;
+            const { user } = req;
             const userRole = user.role
-            if( userRole === 'headman' || userRole === 'group') {
+            if (userRole === 'headman' || userRole === 'group') {
                 const candidate = await userService.findUserByAuthId(user.id)
-                if(candidate.groupId !== +groupId) {
+                if (candidate.GroupId !== +groupId) {
                     throw ApiError.badRequest('Группа не найдена')
                 }
             }

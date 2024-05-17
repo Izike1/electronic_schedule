@@ -30,13 +30,13 @@ class GroupService {
     //     return await Groups.findAll({ where: { id: id } })
     // }
 
-    async getSelfGroup(id) {
-        const user = await User.findOne({ where: { id: id } })
+    async getSelfGroup(authId) {
+        const user = await User.findOne({ where: { AuthId: authId } })
         if (!user) {
             console.log('Пользователь не найден')
             writeToLogFile(`Пользователь не найден ${user}`)
         }
-        return await Groups.findOne({ where: { id: user.groupId } })
+        return await Groups.findOne({ where: { id: user.GroupId } })
     }
 
     async getGroupsByFaculty(id) {

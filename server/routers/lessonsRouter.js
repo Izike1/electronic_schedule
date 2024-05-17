@@ -4,6 +4,6 @@ const lessonController = require('../controllers/lessonController')
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddlewareCreator = require("../middleware/roleMiddlewareCreator");
 
-router.get('/getLessons', authMiddleware(), roleMiddlewareCreator(['admin']), lessonController.getLessons)
+router.get('/getLessons', authMiddleware(), roleMiddlewareCreator(['admin', 'teacher', 'dean']), lessonController.getLessons)
 
 module.exports = router

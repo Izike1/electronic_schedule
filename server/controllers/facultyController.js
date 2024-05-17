@@ -42,7 +42,6 @@ class FacultyController {
     async deleteFaculty(req, res, next) {
         try {
             const { id } = req.body;
-            console.log(id)
             const faculty = await facultyService.deleteFaculty(id)
             res.json(faculty)
         } catch (e) {
