@@ -38,6 +38,11 @@ const Faculty = sequelize.define('Faculty', {
     name: { type: DataTypes.STRING, notNull: true }
 })
 
+const Departament = sequelize.define('Departament', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING }
+})
+
 const Schedule = sequelize.define('Schedule', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     type: { type: DataTypes.STRING },
@@ -65,6 +70,9 @@ Attendance.belongsTo(User)
 Groups.hasMany(User)
 User.belongsTo(Groups)
 
+Departament.hasMany(User)
+User.belongsTo(Departament)
+
 Schedule.hasMany(Attendance)
 Attendance.belongsTo(Schedule)
 
@@ -87,5 +95,6 @@ module.exports = {
     User,
     User_info,
     Faculty,
+    Departament,
     Lesson_has_Schedule
 }

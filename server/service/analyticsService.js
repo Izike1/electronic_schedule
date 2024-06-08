@@ -5,7 +5,7 @@ const Excel = require('exceljs');
 const { Sequelize } = require('../db');
 
 const attendancesRu = {
-    'unknown': 'неизвестно',
+    'unknown': 'не изучал',
     'attended': 'присутствовал',
     'absent': 'не был',
     'sick': 'болел',

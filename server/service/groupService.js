@@ -17,11 +17,14 @@ class GroupService {
         if (!group) {
             writeToLogFile(`Группа не существует`)
             throw ApiError.badRequest('Группа не существует')
-        } else {
-            group.name = groupName
-            group.facultyId = facultyId
-            await group.save()
         }
+        await Groups.update(
+            {
+                name: groupName,
+                facultyId: facultyId
+            },
+        );
+
         return group
     }
 

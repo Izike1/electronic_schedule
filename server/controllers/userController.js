@@ -12,6 +12,16 @@ class UserController {
         }
     }
 
+    async changeUser(req, res, next) {
+        try {
+            const { id, newUserData } = req.body;
+            const user = await userService.changeUser(id, newUserData);
+            res.json(user)
+        } catch (e) {
+            next(e)
+        }
+    }
+
     async getUser(req, res, next) {
         try {
             const { id } = req.query;

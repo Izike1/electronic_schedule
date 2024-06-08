@@ -44,6 +44,25 @@ class UserService {
         return result;
     }
 
+    async changeUser(id, newUserData) {
+        const user = await User.findByPk(id, {
+            include: [{ model: User_info }]
+        });
+        if (!user) {
+            throw ApiError.badRequest('Пользователь не найден');
+        }
+        await User_info.update(
+            {
+                first_name: newUserData.first_name || user.User_info.first_name,
+                last_name: newUserData.last_name || user.User_info.last_name,
+                middle_name: newUserData.middle_name || user.User_info.middle_name
+            },
+            {
+                where: { id: user.UserInfoId }
+            }
+        );
+    }
+
     async findUserByAuthId(authId) {
         const user = await User.findOne({ where: { AuthId: authId } })
         writeToLogFile(`Получение пользователя ${authId}`)

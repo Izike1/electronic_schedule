@@ -2,7 +2,7 @@ export const NavigationRoutesConfig = {
     'admin': {
         pathes: [
             {
-                name: 'Администрация',
+                name: 'Администрирование',
                 link: '/admin/faculties'
             },
             {
