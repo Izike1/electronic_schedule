@@ -1,4 +1,5 @@
-const { User, User_info, Departament } = require('../models/models');
+const { User, User_info, Departament, Auth } = require('../models/models');
+const { rusToLogin } = require('./rusToLatin')
 const Excel = require('exceljs');
 
 async function processTeachersExcelFile(filePath) {
@@ -6,13 +7,18 @@ async function processTeachersExcelFile(filePath) {
     await workbook.xlsx.readFile(filePath);
 
     const worksheet = workbook.getWorksheet('Teachers');
-
+    const arr = []
     worksheet.eachRow({ includeEmpty: false }, async (row, rowNumber) => {
-        if (rowNumber < 4) return;
+        arr.push({ row, rowNumber })
+    })
+    for (let { row, rowNumber } of arr) {
+        if (rowNumber < 3) continue;
 
         const rowData = row.values;
-        const [, , fio, , departamentName] = rowData;
+        const [, , fio, departamentName] = rowData;
         const [lastName, firstName, middleName] = fio.split(' ');
+        const password = Math.floor(1000000 + Math.random() * 9000000).toString();
+        const rusLogin = rusToLogin(lastName + '_' + firstName)
 
         const [departament] = await Departament.findOrCreate({
             where: {
@@ -26,11 +32,18 @@ async function processTeachersExcelFile(filePath) {
             middle_name: middleName || null,
         });
 
-        await User.create({
-            UserInfoId: userInfo.id,
-            DepartamentId: departament.id,
+        const createdAuth = await Auth.create({
+            login: rusLogin,
+            password: password,
+            role: 'teacher'
         });
-    });
+
+        await User.create({
+            AuthId: createdAuth.id,
+            DepartamentId: departament.id,
+            UserInfoId: userInfo.id
+        });
+    }
 }
 
 module.exports = processTeachersExcelFile;

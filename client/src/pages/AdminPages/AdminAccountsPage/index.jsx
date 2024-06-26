@@ -10,6 +10,7 @@ import FixedButton from "../../../ui/FixedButton"
 
 import Modal from "../../../ui/Modal"
 import FormCreateAccount from "../../../forms/FormCreateAccount"
+import AutocreateGroup from "../../../components/AutocreateGroup"
 
 const AdminAccountsPage = (props) => {
     const [searchVal, setSearchVal] = useState('')
@@ -18,6 +19,8 @@ const AdminAccountsPage = (props) => {
     })
     const [isActiveCreateForm, setIsActiveCreateForm] = useState(false)
     return <Page hasNav>
+        <AutocreateGroup />
+
         <FixedButton onClick={() => {
             setIsActiveCreateForm(true)
         }} isActive={currentPos !== 'hide_button'} tooltip="Здесь можно создать новые аккаунты" />

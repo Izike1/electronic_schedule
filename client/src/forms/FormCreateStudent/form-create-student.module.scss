@@ -1,0 +1,17 @@
+.form {
+    width: 300px;
+    min-height: 100px;
+    padding: 26px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+}
+
+@media screen and (max-width:420px) {
+    .form {
+        width: 250px;
+        min-height: 100px;
+        padding: 20px;
+        padding-bottom: 5px;
+        padding-top: 10px;
+    }
+}

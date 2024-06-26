@@ -95,7 +95,7 @@ const AdminGroupsPage = (props) => {
 
                                 <Wrapper verticalMargin direaction='col'>
                                     {filtredGroups.map((g) => {
-                                        return <GroupCard removeBtn onRemove={() => {
+                                        return <GroupCard isAdmin removeBtn onRemove={() => {
                                             setDeleteFocus(g)
                                             setActiveDeletePrompt(true)
                                         }} key={g.id} name={g.name} id={g.id} />

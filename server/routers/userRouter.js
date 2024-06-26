@@ -1,4 +1,4 @@
-const {Router} = require('express')
+const { Router } = require('express')
 const router = Router()
 const userController = require('../controllers/userController')
 const authMiddleware = require('../middleware/authMiddleware')
@@ -11,5 +11,5 @@ router.get('/getUsersByGroupName', authMiddleware(), roleMiddlewareCreator(['adm
 router.get('/getUsersByFacultyName', authMiddleware(), roleMiddlewareCreator(['admin']), userController.getUsersByFacultyName)
 
 router.delete('/removeUser', authMiddleware(), roleMiddlewareCreator(['admin']), userController.removeUser)
-
+router.post('/changeUser', authMiddleware(), roleMiddlewareCreator(['admin']), userController.changeUser)
 module.exports = router

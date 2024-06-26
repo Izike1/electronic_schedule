@@ -1,12 +1,39 @@
-@import '../../configs/colors.scss';
+@import '../../../configs/colors.scss';
 
-///// styleType
-.btn {
-    padding: 6px 20px;
-    display: block;
-    border-radius: 4px;
-    transition: background-color 300ms, color 300ms, border-color 300ms;
+.label {
+    border: 1px solid $gray;
+    border-radius: 3px;
+    transition: background-color 500ms;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
 
+.input {
+    display: none;
+}
+
+
+.small {
+    padding: 6px 8px;
+    font-size: 14px;
+    min-width: 210px;
+    font-size: 14px;
+}
+
+.medium {
+    padding: 10px 12px;
+    font-size: 16px;
+    min-width: 220px;
+    font-size: 16px;
+}
+
+.large {
+    font-size: 20px;
+    padding: 16px 20px;
+    min-width: 230px;
+    font-size: 20px;
 }
 
 .common {
@@ -14,7 +41,7 @@
     border: 1px solid $gray;
     color: black;
 
-    &:not(.disabled):not(.loading) {
+    &:not(.disabled) {
         &:hover {
             background-color: #eaeaea;
         }
@@ -27,7 +54,7 @@
 
     color: white;
 
-    &:not(.disabled):not(.loading) {
+    &:not(.disabled) {
         &:hover {
             background-color: lighten($l_blue, 5);
         }
@@ -51,28 +78,6 @@
     border: 1px solid $gray;
     color: $gray;
     position: relative;
-    cursor: not-allowed;
-}
 
-/////
-///// sizes
-.large {
-    font-size: 20px;
-}
-
-.medium {
-    font-size: 16px;
-}
-
-.small {
-    font-size: 14px;
-}
-
-/////
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
     cursor: not-allowed;
 }

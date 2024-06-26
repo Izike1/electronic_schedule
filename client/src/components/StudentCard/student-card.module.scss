@@ -1,0 +1,43 @@
+@import '../../configs/colors.scss';
+
+.card {
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: $ll_gray;
+    display: flex;
+    text-decoration: none;
+    color: $dd_gray;
+    padding: 15px 20px;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 300ms;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($ll_gray, 5);
+    }
+}
+
+.btn_wrap {
+    width: 100px;
+}
+
+.name {
+    margin: 0;
+}
+
+.edit {
+    background-color: $pale_blue;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.remove {
+    background-color: $red;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}

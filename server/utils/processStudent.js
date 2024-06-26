@@ -6,9 +6,12 @@ async function processStudentsExcelFile(filePath) {
     await workbook.xlsx.readFile(filePath);
 
     const worksheet = workbook.getWorksheet('Students');
-
+    const arr = []
     worksheet.eachRow({ includeEmpty: false }, async (row, rowNumber) => {
-        if (rowNumber < 4) return;
+        arr.push({ row, rowNumber })
+    })
+    for (let { row, rowNumber } of arr) {
+        if (rowNumber < 3) continue;
 
         const rowData = row.values;
         const [, , fio, , facultyName, groupName] = rowData;
@@ -39,7 +42,7 @@ async function processStudentsExcelFile(filePath) {
             UserInfoId: userInfo.id,
             GroupId: group.id,
         });
-    });
+    }
 }
 
 module.exports = processStudentsExcelFile;

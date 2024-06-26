@@ -22,4 +22,7 @@ export class AccountService {
             login, password, role, ...data
         })
     }
+    static async autocreateGroups() {
+        return await $api.post('/registerGroup/createGroupsProfile')
+    }
 }

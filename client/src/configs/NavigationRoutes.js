@@ -17,6 +17,10 @@ export const NavigationRoutesConfig = {
                 name: 'Аналитика',
                 link: '/analize'
             },
+            {
+                name: 'Импорт',
+                link: '/import'
+            },
         ]
     },
     'dean': {

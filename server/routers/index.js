@@ -10,6 +10,7 @@ const scheduleRouter = require('./scheduleRouter')
 const analyticsRouter = require('./analyticsRouter')
 const attendanceRouter = require('./attendanceRouter')
 const uploadHandler = require('./uploadHandlerRouter')
+const registerGroups = require('./registerGroupRouter')
 // authMiddleware(), roleMiddlewareCreator(['admin'])
 
 router.use('/auth', authRouter)
@@ -21,5 +22,6 @@ router.use('/faculty', facultyRouter)
 router.use('/schedule', scheduleRouter)
 router.use('/analytics', analyticsRouter)
 router.use('/attendance', attendanceRouter)
+router.use('/registerGroup', registerGroups)
 
 module.exports = router

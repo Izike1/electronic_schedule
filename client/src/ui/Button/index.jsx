@@ -33,7 +33,7 @@ const Button = ({ size = "small", isLoading = false, disabled = false, styleType
     }), [size, styleType, isLoading, disabled])
     const getClasses = useClassMap(classMap)
     return <button ref={ref} style={isLoading ? { ...sizes, ...style } : { ...style }} className={getClasses()} {...props}>
-        {isLoading ? <Loading white size={size === 'large' ? 'medium' : 'small'} /> : children}
+        {isLoading ? <Loading white={styleType !== 'common'} size={size === 'large' ? 'medium' : 'small'} /> : children}
     </button>
 }
 export default Button

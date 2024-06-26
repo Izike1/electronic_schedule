@@ -1,4 +1,4 @@
-const { User, Groups, User_info, Faculty } = require('../models/models');
+const { User, Groups, User_info, Faculty, Attendance } = require('../models/models');
 const ApiError = require('../error/ApiError');
 const { writeToLogFile } = require('../logger/index')
 const sequelize = require('../db')
@@ -105,7 +105,7 @@ class UserService {
             }]
         });
         if (!group) {
-            throw ApiError.badRequest('Группа не найдена')
+            throw ApiError.badRequest('Группа не найдена или нет студентов')
         }
         writeToLogFile(`Получение пользователей ${group.name}`)
         return group
@@ -139,13 +139,17 @@ class UserService {
             throw ApiError.badRequest('Пользователь не найден');
         }
         writeToLogFile(`Удаление пользователя ${id}`)
-
-
         return await sequelize.transaction(async (t) => {
             await User_info.destroy({
-                where: { UserInfoId: user.dataValues.UserInfoId },
+                where: { id: user.UserInfoId },
                 transaction: t
             });
+            await Attendance.destroy({
+                where: {
+                    UserId: id,
+                }
+                , transaction: t
+            })
             await User.destroy({ where: { id: id }, transaction: t })
         })
     }

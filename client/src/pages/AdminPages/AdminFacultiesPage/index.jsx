@@ -51,7 +51,6 @@ const AdminFacultiesPage = (props) => {
                 {isLoading || !faculties ? <Wrapper fullPageOptions={{ hasNav: true }} justify="center" align="center">
                     <Loading size="large"></Loading>
                 </Wrapper> : <>
-                    {console.log(faculties)}
                     {faculties.map((faculty) => {
                         return <FacultyCard key={faculty.id} faculty={faculty}></FacultyCard>
                     })}
